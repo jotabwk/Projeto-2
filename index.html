@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projeto AlerGria</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+    (function() {
+        emailjs.init("O7MGOePIIRV8upUhO");
+    })();
+</script>
+</script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -659,19 +666,41 @@
             const email = document.getElementById('user-email').value;
             const pass = document.getElementById('user-pass').value;
             if(email && pass) {
-                // Simula o salvamento no banco de dados através do LocalStorage
-                let users = JSON.parse(localStorage.getItem('alergria_users')) || [];
-                users.push({email: email, password: pass});
-                localStorage.setItem('alergria_users', JSON.stringify(users));
-                
-                alert('Conta criada com sucesso! Seja bem-vindo(a) ao Projeto AlerGria.');
-                document.getElementById('user-email').value = '';
-                document.getElementById('user-pass').value = '';
-                showView('view-home');
-            } else {
-                alert('Por favor, preencha o seu e-mail e crie uma senha.');
-            }
-        }
+        // Muda o texto do botão para mostrar que está carregando
+        const textoOriginal = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando conta...';
+        btn.disabled = true;
+
+        // Salva os dados no navegador
+        let users = JSON.parse(localStorage.getItem('alergria_users')) || [];
+        users.push({email: email, password: pass});
+        localStorage.setItem('alergria_users', JSON.stringify(users));
+        
+        // Dispara o E-mail automático usando EmailJS
+        // SUBSTITUA OS DADOS ABAIXO PELOS SEUS CÓDIGOS DO EMAILJS
+        emailjs.send("SEU_SERVICE_ID", "SEU_NOVO_TEMPLATE_ID", {
+            user_email: email,
+        })
+        .then(() => {
+            alert('Conta criada com sucesso! Enviamos um e-mail de boas-vindas para você.');
+            document.getElementById('user-email').value = '';
+            document.getElementById('user-pass').value = '';
+            showView('view-home');
+        })
+        .catch((error) => {
+            alert('Conta criada, mas houve um erro ao enviar o e-mail automático.');
+            console.log('Erro do EmailJS:', error);
+            showView('view-home');
+        })
+        .finally(() => {
+            btn.innerHTML = textoOriginal;
+            btn.disabled = false;
+        });
+        
+    } else {
+        alert('Por favor, preencha o seu e-mail e crie uma senha.');
+    }
+}
 
         function loginAdmin() {
             const pass = document.getElementById('admin-pass').value;
