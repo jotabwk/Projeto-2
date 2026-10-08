@@ -329,7 +329,42 @@
         </section>
 
         <!-- Login View (ATUALIZADO COM CRIAÇÃO DE CONTA) -->
+        <!-- Login View (ATUALIZADO COM ENTRAR, CRIAR CONTA E ADMIN) -->
         <section id="view-login" class="view-section py-12 text-center">
+            <h2 class="font-fredoka text-3xl font-bold mb-8 text-gray-800 dark:text-white">Área de Acesso</h2>
+            <div class="max-w-md mx-auto bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50">
+                
+                <!-- Abas de Navegação do Login -->
+                <div class="flex justify-center space-x-2 mb-8 bg-gray-100/50 dark:bg-gray-900/50 p-1.5 rounded-full border border-gray-200 dark:border-gray-700">
+                    <button onclick="toggleLogin('login')" id="tab-login" class="w-1/3 py-2.5 rounded-full font-bold bg-white dark:bg-gray-800 shadow-sm text-alergria-blue transition-all">Entrar</button>
+                    <button onclick="toggleLogin('user')" id="tab-user" class="w-1/3 py-2.5 rounded-full font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-all">Criar Conta</button>
+                    <button onclick="toggleLogin('admin')" id="tab-admin" class="w-1/3 py-2.5 rounded-full font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-all">Admin</button>
+                </div>
+
+                <!-- Formulário: Entrar (NOVO) -->
+                <div id="form-login" class="space-y-5 animate-[fadeIn_0.3s_ease-out]">
+                    <input type="email" id="login-email" placeholder="Seu e-mail" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <input type="password" id="login-pass" placeholder="Sua senha" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <button onclick="loginUser(event)" class="w-full bg-gradient-to-r from-alergria-blue to-blue-500 text-white font-bold text-lg py-4 rounded-2xl hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 transition-all duration-300 border border-white/10">Acessar Conta</button>
+                </div>
+
+                <!-- Formulário: Criar Conta (ATUALIZADO COM NOME) -->
+                <div id="form-user" class="hidden space-y-5 animate-[fadeIn_0.3s_ease-out]">
+                    <input type="text" id="user-name" placeholder="Seu nome completo" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <input type="email" id="user-email" placeholder="Seu melhor e-mail" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <input type="password" id="user-pass" placeholder="Crie uma senha" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <button onclick="registerUser(event)" class="w-full bg-gradient-to-r from-alergria-blue to-blue-500 text-white font-bold text-lg py-4 rounded-2xl hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 transition-all duration-300 border border-white/10">Criar Minha Conta</button>
+                </div>
+
+                <!-- Formulário: Admin -->
+                <div id="form-admin" class="hidden space-y-5 animate-[fadeIn_0.3s_ease-out]">
+                    <input type="password" id="admin-pass" placeholder="Senha" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-gray-800 focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <button onclick="loginAdmin()" class="w-full bg-gradient-to-r from-gray-800 to-gray-700 dark:from-gray-700 dark:to-gray-600 text-white font-bold text-lg py-4 rounded-2xl hover:shadow-lg hover:shadow-gray-500/30 active:scale-95 transition-all duration-300 border border-white/10">Entrar no Painel</button>
+                </div>
+
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mt-6 bg-white/50 dark:bg-gray-800/50 p-3 rounded-xl border border-gray-100 dark:border-gray-700">Nota: O sistema salva os dados apenas no navegador (LocalStorage).</p>
+            </div>
+        </section>
             <h2 class="font-fredoka text-3xl font-bold mb-8 text-gray-800 dark:text-white">Área de Acesso</h2>
             <div class="max-w-md mx-auto bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50">
                 
@@ -640,79 +675,106 @@
 
         // --- SISTEMA DE LOGIN ATUALIZADO ---
         function toggleLogin(type) {
-            const tabUser = document.getElementById('tab-user');
-            const tabAdmin = document.getElementById('tab-admin');
-            const formUser = document.getElementById('form-user');
-            const formAdmin = document.getElementById('form-admin');
-
-            if(type === 'user') {
-                formUser.classList.remove('hidden');
-                formAdmin.classList.add('hidden');
-                tabUser.classList.add('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
-                tabUser.classList.remove('text-gray-500');
-                tabAdmin.classList.remove('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
-                tabAdmin.classList.add('text-gray-500');
-            } else {
-                formAdmin.classList.remove('hidden');
-                formUser.classList.add('hidden');
-                tabAdmin.classList.add('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
-                tabAdmin.classList.remove('text-gray-500');
-                tabUser.classList.remove('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
-                tabUser.classList.add('text-gray-500');
-            }
+            const tabs = ['login', 'user', 'admin'];
+            tabs.forEach(t => {
+                const form = document.getElementById('form-' + t);
+                const tab = document.getElementById('tab-' + t);
+                if (t === type) {
+                    form.classList.remove('hidden');
+                    tab.classList.add('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
+                    tab.classList.remove('text-gray-500');
+                } else {
+                    form.classList.add('hidden');
+                    tab.classList.remove('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
+                    tab.classList.add('text-gray-500');
+                }
+            });
         }
 
         function registerUser(event) {
-    const email = document.getElementById('user-email').value;
-    const pass = document.getElementById('user-pass').value;
-    const btn = event.currentTarget; 
-    
-    if(email && pass) {
-        // Muda o texto do botão para mostrar que está carregando
-        const textoOriginal = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando conta...';
-        btn.disabled = true;
+            const name = document.getElementById('user-name').value;
+            const email = document.getElementById('user-email').value;
+            const pass = document.getElementById('user-pass').value;
+            const btn = event.currentTarget; 
+            
+            if(name && email && pass) {
+                // Bloqueia o botão e mostra que está a carregar
+                const textoOriginal = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando conta...';
+                btn.disabled = true;
 
-        // Salva os dados no navegador
-        let users = JSON.parse(localStorage.getItem('alergria_users')) || [];
-        users.push({email: email, password: pass});
-        localStorage.setItem('alergria_users', JSON.stringify(users));
-        
-        // Verifica se o EmailJS foi carregado na página
-        if (typeof emailjs === 'undefined') {
-            alert('Conta criada com sucesso no sistema local! (EmailJS não detectado)');
-            document.getElementById('user-email').value = '';
-            document.getElementById('user-pass').value = '';
-            btn.innerHTML = textoOriginal;
-            btn.disabled = false;
-            showView('view-home');
-            return;
+                let users = JSON.parse(localStorage.getItem('alergria_users')) || [];
+                
+                // Verifica se o e-mail já existe
+                if(users.some(u => u.email === email)) {
+                    alert('Este e-mail já está cadastrado. Tente fazer login!');
+                    btn.innerHTML = textoOriginal;
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Salva o utilizador com o Nome
+                users.push({name: name, email: email, password: pass});
+                localStorage.setItem('alergria_users', JSON.stringify(users));
+                
+                if (typeof emailjs === 'undefined') {
+                    alert(`Conta criada com sucesso, ${name}! (EmailJS não detectado)`);
+                    document.getElementById('user-name').value = '';
+                    document.getElementById('user-email').value = '';
+                    document.getElementById('user-pass').value = '';
+                    btn.innerHTML = textoOriginal; btn.disabled = false;
+                    showView('view-home');
+                    return;
+                }
+
+                // Envia o Nome junto no EmailJS
+                emailjs.send("SEU_SERVICE_ID", "SEU_NOVO_TEMPLATE_ID", {
+                    user_name: name,
+                    user_email: email,
+                })
+                .then(() => {
+                    alert(`Conta criada com sucesso, ${name}! Enviamos um e-mail de boas-vindas.`);
+                    document.getElementById('user-name').value = '';
+                    document.getElementById('user-email').value = '';
+                    document.getElementById('user-pass').value = '';
+                    showView('view-home');
+                })
+                .catch((error) => {
+                    alert('Conta criada, mas houve um erro ao enviar o e-mail automático.');
+                    console.log('Erro do EmailJS:', error);
+                    showView('view-home');
+                })
+                .finally(() => {
+                    btn.innerHTML = textoOriginal;
+                    btn.disabled = false;
+                });
+                
+            } else {
+                alert('Por favor, preencha o seu nome, e-mail e senha.');
+            }
         }
+        function loginUser(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
 
-        // Dispara o E-mail automático usando EmailJS
-        emailjs.send("service_5w50c8l", "template_zlw1s2v", {
-            user_email: email,
-        })
-        .then(() => {
-            alert('Conta criada com sucesso! Enviamos um e-mail de boas-vindas para você.');
-            document.getElementById('user-email').value = '';
-            document.getElementById('user-pass').value = '';
-            showView('view-home');
-        })
-        .catch((error) => {
-            alert('Conta criada, mas houve um erro ao enviar o e-mail automático.');
-            console.log('Erro do EmailJS:', error);
-            showView('view-home');
-        })
-        .finally(() => {
-            btn.innerHTML = textoOriginal;
-            btn.disabled = false;
-        });
-        
-    } else {
-        alert('Por favor, preencha o seu e-mail e crie uma senha.');
-    }
-}
+            if(email && pass) {
+                let users = JSON.parse(localStorage.getItem('alergria_users')) || [];
+                // Busca o utilizador no LocalStorage
+                const user = users.find(u => u.email === email && u.password === pass);
+
+                if(user) {
+                    alert(`Bem-vindo(a) de volta, ${user.name}!`);
+                    document.getElementById('login-email').value = '';
+                    document.getElementById('login-pass').value = '';
+                    showView('view-home');
+                } else {
+                    alert('E-mail ou senha incorretos. Tente novamente.');
+                }
+            } else {
+                alert('Por favor, preencha seu e-mail e senha.');
+            }
+        }
         function loginAdmin() {
             const pass = document.getElementById('admin-pass').value;
             if(pass === 'BancaSenai') {
