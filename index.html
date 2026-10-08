@@ -341,9 +341,9 @@
 
                 <!-- Formulário: Criar Conta -->
                 <div id="form-user" class="space-y-5 animate-[fadeIn_0.3s_ease-out]">
-                    <input type="email" id="user-email" placeholder="Seu melhor e-mail" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
-                    <input type="password" id="user-pass" placeholder="Crie uma senha" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
-                    <button onclick="registerUser()" class="w-full bg-gradient-to-r from-alergria-blue to-blue-500 text-white font-bold text-lg py-4 rounded-2xl hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 transition-all duration-300 border border-white/10">Criar Minha Conta</button>
+    <input type="email" id="user-email" ...>
+    <input type="password" id="user-pass" ...>
+    <button onclick="registerUser(event)" class="w-full bg-gradient-to-r from-alergria-blue to-blue-500 text-white font-bold text-lg py-4 rounded-2xl hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 transition-all duration-300 border border-white/10">Criar Minha Conta</button>
                 </div>
 
                 <!-- Formulário: Admin -->
@@ -662,10 +662,12 @@
             }
         }
 
-        function registerUser() {
-            const email = document.getElementById('user-email').value;
-            const pass = document.getElementById('user-pass').value;
-            if(email && pass) {
+        function registerUser(event) {
+    const email = document.getElementById('user-email').value;
+    const pass = document.getElementById('user-pass').value;
+    const btn = event.currentTarget; 
+    
+    if(email && pass) {
         // Muda o texto do botão para mostrar que está carregando
         const textoOriginal = btn.innerHTML;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando conta...';
@@ -676,8 +678,18 @@
         users.push({email: email, password: pass});
         localStorage.setItem('alergria_users', JSON.stringify(users));
         
+        // Verifica se o EmailJS foi carregado na página
+        if (typeof emailjs === 'undefined') {
+            alert('Conta criada com sucesso no sistema local! (EmailJS não detectado)');
+            document.getElementById('user-email').value = '';
+            document.getElementById('user-pass').value = '';
+            btn.innerHTML = textoOriginal;
+            btn.disabled = false;
+            showView('view-home');
+            return;
+        }
+
         // Dispara o E-mail automático usando EmailJS
-        // SUBSTITUA OS DADOS ABAIXO PELOS SEUS CÓDIGOS DO EMAILJS
         emailjs.send("SEU_SERVICE_ID", "SEU_NOVO_TEMPLATE_ID", {
             user_email: email,
         })
@@ -701,7 +713,6 @@
         alert('Por favor, preencha o seu e-mail e crie uma senha.');
     }
 }
-
         function loginAdmin() {
             const pass = document.getElementById('admin-pass').value;
             if(pass === 'BancaSenai') {
