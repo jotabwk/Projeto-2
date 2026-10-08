@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto AlerGria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        alergria: {
+                            pink: '#FF5AAE',
+                            blue: '#2F9BFF',
+                            yellow: '#FAEA53',
+                            orange: '#FF8200'
+                        }
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        nunito: ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-fredoka { font-family: 'Fredoka', sans-serif; }
+        .font-nunito { font-family: 'Nunito', sans-serif; }
+        
+        .view-section { 
+            display: none; 
+            opacity: 0; 
+            transform: translateY(20px) scale(0.98);
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .view-section.active { display: block; }
+        .view-section.fade-in { opacity: 1; transform: translateY(0) scale(1); }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(8deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .shape-float { animation: float 7s ease-in-out infinite; }
+        .shape-float-delay-1 { animation: float 9s ease-in-out infinite 1.5s; }
+        .shape-float-delay-2 { animation: float 8s ease-in-out infinite 3s; }
+        
+        html { scroll-behavior: smooth; }
+
+        .memory-card {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .memory-card.hidden-card {
+            background-color: #2F9BFF;
+            color: transparent;
+        }
+        .memory-card.revealed {
+            background-color: #fff;
+            transform: scale(1.05);
+            border: 2px solid #2F9BFF;
+        }
+    </style>
+</head>
+<body class="font-nunito text-gray-800 dark:text-gray-100 transition-colors duration-500 relative overflow-x-hidden min-h-screen bg-fixed bg-gradient-to-br from-alergria-blue/15 via-alergria-pink/10 to-alergria-yellow/15 dark:from-alergria-blue/20 dark:via-gray-900 dark:to-alergria-orange/10">
+
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-10 left-10 w-32 h-32 bg-alergria-pink rounded-full opacity-40 dark:opacity-20 shape-float shadow-xl backdrop-blur-3xl"></div>
+        <div class="absolute bottom-40 right-20 w-48 h-48 bg-alergria-yellow rounded-full opacity-40 dark:opacity-20 shape-float-delay-1 shadow-xl"></div>
+        <div class="absolute top-1/2 left-1/3 w-24 h-24 bg-alergria-blue rounded-full opacity-40 dark:opacity-20 shape-float-delay-2 shadow-xl"></div>
+        <div class="absolute top-40 right-1/4 w-28 h-28 bg-alergria-blue transform rotate-12 opacity-30 dark:opacity-20 shape-float-delay-1 rounded-3xl shadow-xl"></div>
+        <div class="absolute bottom-20 left-1/4 w-32 h-32 bg-alergria-orange transform -rotate-12 opacity-30 dark:opacity-20 shape-float rounded-3xl shadow-xl"></div>
+
+        <i class="fa-solid fa-star absolute top-20 right-12 text-6xl text-alergria-yellow opacity-50 dark:opacity-30 shape-float-delay-2 drop-shadow-lg"></i>
+        <i class="fa-solid fa-star absolute top-3/4 left-12 text-5xl text-alergria-pink opacity-50 dark:opacity-30 shape-float-delay-1 drop-shadow-lg"></i>
+        <i class="fa-solid fa-star absolute bottom-1/3 right-1/3 text-7xl text-alergria-blue opacity-50 dark:opacity-30 shape-float drop-shadow-lg"></i>
+    </div>
+
+    <nav class="bg-gradient-to-r from-alergria-pink/10 via-white/60 to-alergria-blue/10 dark:from-alergria-pink/20 dark:via-gray-900/80 dark:to-alergria-blue/20 backdrop-blur-xl shadow-md p-4 sticky top-0 z-50 transition-colors duration-500 border-b border-white/40 dark:border-gray-700/50 border-t-4 border-t-alergria-pink">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95" onclick="showView('view-home')">
+                <img src="image_3b11e2.jpg" alt="Logótipo AlerGria" class="h-16 w-auto object-contain rounded-xl shadow-sm">
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300 hover:rotate-12 active:scale-90 shadow-sm">
+                    <i class="fa-solid fa-moon dark:hidden text-alergria-blue"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-alergria-yellow"></i>
+                </button>
+                <button onclick="showView('view-login')" class="font-fredoka font-bold text-alergria-blue dark:text-white hover:text-white hover:bg-alergria-blue transition-all duration-300 bg-white/80 dark:bg-gray-700/80 px-5 py-2 rounded-full active:scale-95 shadow-sm border border-alergria-blue/20">Entrar</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-4 min-h-[80vh] relative z-10">
+        
+        <!-- Home View -->
+        <section id="view-home" class="view-section active fade-in text-center py-12">
+            <h1 class="font-fredoka text-4xl md:text-5xl font-bold text-alergria-pink mb-4 drop-shadow-sm">
+                Mesmo de longe, o carinho chega até você.
+            </h1>
+            <p class="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-12 max-w-2xl mx-auto font-medium">
+                Uma plataforma de apoio emocional e entretenimento feita para transformar a distância em carinho com muita segurança e diversão.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <button onclick="showView('view-paciente')" class="group bg-gradient-to-br from-alergria-blue to-blue-400 text-white p-8 rounded-3xl shadow-xl transform transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl hover:shadow-alergria-blue/30 active:scale-95 flex flex-col items-center border border-white/20">
+                    <i class="fa-solid fa-gamepad text-5xl mb-4 group-hover:animate-bounce"></i>
+                    <span class="font-fredoka text-2xl font-bold">Sou Paciente</span>
+                    <span class="text-sm mt-2 opacity-90">Jogos e mensagens</span>
+                </button>
+                <button onclick="showView('view-familiar')" class="group bg-gradient-to-br from-alergria-pink to-pink-400 text-white p-8 rounded-3xl shadow-xl transform transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl hover:shadow-alergria-pink/30 active:scale-95 flex flex-col items-center border border-white/20">
+                    <i class="fa-solid fa-envelope-open-text text-5xl mb-4 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-fredoka text-2xl font-bold">Sou Familiar</span>
+                    <span class="text-sm mt-2 opacity-90">Envie seu carinho</span>
+                </button>
+                <button onclick="showView('view-ajudar')" class="group bg-gradient-to-br from-alergria-yellow to-yellow-300 text-gray-800 p-8 rounded-3xl shadow-xl transform transition-all duration-300 hover:-translate-y-3 hover:shadow-2xl hover:shadow-alergria-yellow/30 active:scale-95 flex flex-col items-center border border-white/20">
+                    <i class="fa-solid fa-hand-holding-heart text-5xl mb-4 group-hover:rotate-12 transition-transform text-alergria-orange"></i>
+                    <span class="font-fredoka text-2xl font-bold">Quero Ajudar</span>
+                    <span class="text-sm mt-2 opacity-90">Doações e voluntariado</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Paciente View -->
+        <section id="view-paciente" class="view-section py-8">
+            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-blue hover:text-blue-700 dark:text-blue-400 transition-all duration-300 hover:-translate-x-2 font-bold bg-white/70 backdrop-blur-sm dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm border border-white/40" onclick="showView('view-home')">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Voltar
+            </div>
+            <h2 class="font-fredoka text-3xl font-bold text-alergria-blue mb-6">Área de Diversão</h2>
+            
+            <div class="mb-8 bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50">
+                <h3 class="font-fredoka text-xl mb-4 text-alergria-orange">Escolha sua idade:</h3>
+                <div class="flex flex-wrap gap-4">
+                    <button class="px-6 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-white rounded-full font-bold hover:bg-alergria-yellow hover:text-gray-900 hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm border border-gray-100 dark:border-gray-600">4-8 anos</button>
+                    <button class="px-6 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-white rounded-full font-bold hover:bg-alergria-yellow hover:text-gray-900 hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm border border-gray-100 dark:border-gray-600">9-12 anos</button>
+                    <button class="px-6 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-white rounded-full font-bold hover:bg-alergria-yellow hover:text-gray-900 hover:scale-105 active:scale-95 transition-all duration-300 shadow-sm border border-gray-100 dark:border-gray-600">13+ anos</button>
+                </div>
+            </div>
+
+            <!-- Botões dos Jogos -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                <button onclick="loadGame('memoria')" class="bg-gradient-to-br from-alergria-blue to-blue-400 text-white p-6 rounded-3xl text-center shadow-lg hover:shadow-xl hover:shadow-alergria-blue/30 transform hover:-translate-y-2 active:scale-95 transition-all duration-300 border border-white/20">
+                    <i class="fa-solid fa-brain text-4xl mb-3"></i><br><span class="font-bold">Memória</span>
+                </button>
+                <button onclick="loadGame('quiz')" class="bg-gradient-to-br from-alergria-pink to-pink-400 text-white p-6 rounded-3xl text-center shadow-lg hover:shadow-xl hover:shadow-alergria-pink/30 transform hover:-translate-y-2 active:scale-95 transition-all duration-300 border border-white/20">
+                    <i class="fa-solid fa-question text-4xl mb-3"></i><br><span class="font-bold">Quiz</span>
+                </button>
+                <button onclick="loadGame('colorir')" class="bg-gradient-to-br from-alergria-orange to-orange-400 text-white p-6 rounded-3xl text-center shadow-lg hover:shadow-xl hover:shadow-alergria-orange/30 transform hover:-translate-y-2 active:scale-95 transition-all duration-300 border border-white/20">
+                    <i class="fa-solid fa-palette text-4xl mb-3"></i><br><span class="font-bold">Colorir</span>
+                </button>
+                <button onclick="loadGame('historias')" class="bg-gradient-to-br from-alergria-yellow to-yellow-300 text-gray-800 p-6 rounded-3xl text-center shadow-lg hover:shadow-xl hover:shadow-alergria-yellow/30 transform hover:-translate-y-2 active:scale-95 transition-all duration-300 border border-white/20">
+                    <i class="fa-solid fa-book-open text-4xl mb-3"></i><br><span class="font-bold">Histórias</span>
+                </button>
+            </div>
+
+            <!-- Container Interativo do Jogo Ativo -->
+            <div id="game-container" class="hidden mb-12 bg-white/90 backdrop-blur-md dark:bg-gray-800/90 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50 transition-all duration-500">
+                <!-- Conteúdo do jogo renderizado via JS -->
+            </div>
+
+            <h3 class="font-fredoka text-2xl font-bold text-alergria-pink mb-4">Sua Caixa do Afeto</h3>
+            <div id="patient-messages" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Mensagens aprovadas -->
+            </div>
+        </section>
+
+        <!-- Familiar View -->
+        <section id="view-familiar" class="view-section py-8">
+            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-pink hover:text-pink-700 dark:text-pink-400 transition-all duration-300 hover:-translate-x-2 font-bold bg-white/70 backdrop-blur-sm dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm border border-white/40" onclick="showView('view-home')">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Voltar
+            </div>
+            <h2 class="font-fredoka text-3xl font-bold text-alergria-pink mb-6">Enviar Carinho</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50">
+                    <h3 class="font-bold text-2xl mb-6 font-fredoka text-alergria-orange">Nova Mensagem</h3>
+                    <form onsubmit="submitMessage(event)" class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-200">Apelido/Código do Paciente</label>
+                            <input type="text" id="msg-code" required class="w-full p-4 rounded-2xl border-2 border-pink-100 focus:border-alergria-pink focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 transition-colors outline-none shadow-inner">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-200">Sua Mensagem</label>
+                            <textarea id="msg-text" required rows="4" class="w-full p-4 rounded-2xl border-2 border-pink-100 focus:border-alergria-pink focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 transition-colors outline-none shadow-inner"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-200">Anexo (Foto/Vídeo até 1.2MB)</label>
+                            <input type="file" class="w-full p-2 text-sm text-gray-600 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-alergria-pink file:text-white hover:file:bg-pink-600 transition-all cursor-pointer">
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-alergria-pink to-pink-500 text-white font-bold text-lg py-4 rounded-2xl hover:shadow-lg hover:shadow-pink-500/30 active:scale-95 transition-all duration-300">Enviar para Aprovação</button>
+                    </form>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-2xl mb-6 font-fredoka text-alergria-blue">Status dos seus envios</h3>
+                    <div id="family-status-list" class="space-y-4">
+                        <!-- Renderizado via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ajudar View -->
+        <section id="view-ajudar" class="view-section py-8">
+            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-orange hover:text-orange-600 dark:text-orange-400 transition-all duration-300 hover:-translate-x-2 font-bold bg-white/70 backdrop-blur-sm dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm border border-white/40" onclick="showView('view-home')">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Voltar
+            </div>
+            <h2 class="font-fredoka text-3xl font-bold text-alergria-orange mb-6">Faça a Diferença</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl text-center border border-white/40 dark:border-gray-700/50 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-alergria-blue/20">
+                    <i class="fa-solid fa-hand-holding-dollar text-6xl text-alergria-blue mb-6 drop-shadow-md"></i>
+                    <h3 class="font-fredoka text-2xl font-bold mb-3 text-gray-800 dark:text-white">Doações</h3>
+                    <p class="mb-6 text-gray-600 dark:text-gray-300">Aceitamos Pix, Cartão ou Boleto. Ajude com brinquedos, livros ou recursos financeiros.</p>
+                    <button onclick="showView('view-doar')" class="bg-gradient-to-r from-alergria-blue to-blue-500 text-white px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg hover:shadow-blue-500/40 active:scale-95 transition-all duration-300 border border-white/20">Quero Doar</button>
+                </div>
+                <div class="bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl text-center border border-white/40 dark:border-gray-700/50 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-alergria-pink/20">
+                    <i class="fa-solid fa-users text-6xl text-alergria-pink mb-6 drop-shadow-md"></i>
+                    <h3 class="font-fredoka text-2xl font-bold mb-3 text-gray-800 dark:text-white">Voluntariado</h3>
+                    <p class="mb-6 text-gray-600 dark:text-gray-300">Cadastre-se para ajudar na revisão de conteúdos carinhosos ou apoio logístico no projeto.</p>
+                    <button onclick="showView('view-voluntariado')" class="bg-gradient-to-r from-alergria-pink to-pink-500 text-white px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg hover:shadow-pink-500/40 active:scale-95 transition-all duration-300 border border-white/20">Inscrever-se</button>
+                </div>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50">
+                <h3 class="font-fredoka text-2xl font-bold mb-4 text-gray-800 dark:text-white">Campanha Atual: Livros para Todos</h3>
+                <div class="w-full bg-gray-200/50 dark:bg-gray-700/50 rounded-full h-5 mb-3 overflow-hidden shadow-inner backdrop-blur-sm">
+                    <div class="bg-gradient-to-r from-alergria-yellow via-alergria-orange to-alergria-pink h-5 rounded-full transition-all duration-1000 ease-out" style="width: 70%"></div>
+                </div>
+                <p class="text-sm font-bold text-right text-gray-600 dark:text-gray-300">70% da meta atingida</p>
+            </div>
+        </section>
+
+        <!-- Voluntariado View -->
+        <section id="view-voluntariado" class="view-section py-8">
+            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-pink hover:text-pink-700 dark:text-pink-400 transition-all duration-300 hover:-translate-x-2 font-bold bg-white/70 backdrop-blur-sm dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm border border-white/40" onclick="showView('view-ajudar')">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Voltar
+            </div>
+            <h2 class="font-fredoka text-3xl font-bold text-alergria-pink mb-6 text-center">Cadastro de Voluntários</h2>
+            
+            <div class="max-w-2xl mx-auto bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50">
+                <p class="mb-6 text-gray-700 dark:text-gray-300 text-center text-lg font-medium">Junte-se à nossa equipe e ajude a espalhar sorrisos! Preencha o formulário abaixo para se candidatar.</p>
+                
+                <form onsubmit="alert('Cadastro realizado com sucesso! Nossa equipe entrará em contato em breve.'); event.preventDefault(); showView('view-home');" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-200">Nome Completo</label>
+                        <input type="text" required placeholder="Digite seu nome" class="w-full p-4 rounded-2xl border-2 border-pink-100 focus:border-alergria-pink focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors shadow-inner">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-200">E-mail</label>
+                            <input type="email" required placeholder="seu@email.com" class="w-full p-4 rounded-2xl border-2 border-pink-100 focus:border-alergria-pink focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors shadow-inner">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-200">WhatsApp / Telefone</label>
+                            <input type="tel" required placeholder="(00) 00000-0000" class="w-full p-4 rounded-2xl border-2 border-pink-100 focus:border-alergria-pink focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors shadow-inner">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-200">Área de Interesse</label>
+                        <select class="w-full p-4 rounded-2xl border-2 border-pink-100 focus:border-alergria-pink focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors shadow-inner">
+                            <option>Revisão de Conteúdos (Mensagens de familiares)</option>
+                            <option>Apoio Logístico e Triagem de Doações</option>
+                            <option>Tecnologia e Manutenção da Plataforma</option>
+                            <option>Apoio Emocional (Apenas Profissionais)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-gray-700 dark:text-gray-200">Por que você quer nos ajudar?</label>
+                        <textarea rows="3" required placeholder="Conte-nos um pouco sobre sua motivação..." class="w-full p-4 rounded-2xl border-2 border-pink-100 focus:border-alergria-pink focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors shadow-inner"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-alergria-pink to-pink-500 text-white text-lg font-bold py-4 rounded-2xl hover:shadow-lg hover:shadow-pink-500/40 active:scale-95 transition-all duration-300 border border-white/40 mt-4">Enviar Inscrição</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Doar View -->
+        <section id="view-doar" class="view-section py-8">
+             <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-blue hover:text-blue-700 dark:text-blue-400 transition-all duration-300 hover:-translate-x-2 font-bold bg-white/70 backdrop-blur-sm dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm border border-white/40" onclick="showView('view-ajudar')">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Voltar
+            </div>
+            <h2 class="font-fredoka text-3xl font-bold text-alergria-blue mb-6">Simulação de Doação</h2>
+            <div class="max-w-md mx-auto bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50">
+                <form onsubmit="alert('Doação Simulada realizada com sucesso! O sorriso de uma criança agradece.'); event.preventDefault(); showView('view-home');">
+                    <label class="block mb-2 font-bold text-gray-700 dark:text-gray-200">Valor (R$)</label>
+                    <input type="number" class="w-full p-4 mb-5 rounded-2xl border-2 border-blue-100 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors shadow-inner" value="50">
+                    
+                    <label class="block mb-2 font-bold text-gray-700 dark:text-gray-200">Método de Pagamento</label>
+                    <select id="payment-method" onchange="updatePaymentUI()" class="w-full p-4 mb-5 rounded-2xl border-2 border-blue-100 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors shadow-inner">
+                        <option value="pix">Pix (QR Code)</option>
+                        <option value="cartao">Cartão de Crédito</option>
+                        <option value="boleto">Boleto</option>
+                    </select>
+
+                    <div id="payment-details" class="mb-5 transition-all duration-300">
+                        <!-- Campos Dinâmicos de Pagamento -->
+                    </div>
+
+                    <div class="flex items-center mb-8">
+                        <input type="checkbox" id="anon" class="w-5 h-5 text-alergria-blue rounded border-gray-300 focus:ring-alergria-blue cursor-pointer">
+                        <label for="anon" class="ml-3 font-medium cursor-pointer text-gray-700 dark:text-gray-200">Desejo ficar anônimo</label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-alergria-yellow to-yellow-400 text-gray-900 text-lg font-bold py-4 rounded-2xl hover:shadow-lg hover:shadow-yellow-400/40 active:scale-95 transition-all duration-300 border border-white/40">Concluir Doação</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Login View (ATUALIZADO COM CRIAÇÃO DE CONTA) -->
+        <section id="view-login" class="view-section py-12 text-center">
+            <h2 class="font-fredoka text-3xl font-bold mb-8 text-gray-800 dark:text-white">Área de Acesso</h2>
+            <div class="max-w-md mx-auto bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50">
+                
+                <!-- Abas de Navegação do Login -->
+                <div class="flex justify-center space-x-2 mb-8 bg-gray-100/50 dark:bg-gray-900/50 p-1.5 rounded-full border border-gray-200 dark:border-gray-700">
+                    <button onclick="toggleLogin('user')" id="tab-user" class="w-1/2 py-2.5 rounded-full font-bold bg-white dark:bg-gray-800 shadow-sm text-alergria-blue transition-all">Criar Conta</button>
+                    <button onclick="toggleLogin('admin')" id="tab-admin" class="w-1/2 py-2.5 rounded-full font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-all">Admin</button>
+                </div>
+
+                <!-- Formulário: Criar Conta -->
+                <div id="form-user" class="space-y-5 animate-[fadeIn_0.3s_ease-out]">
+                    <input type="email" id="user-email" placeholder="Seu melhor e-mail" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <input type="password" id="user-pass" placeholder="Crie uma senha" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <button onclick="registerUser()" class="w-full bg-gradient-to-r from-alergria-blue to-blue-500 text-white font-bold text-lg py-4 rounded-2xl hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 transition-all duration-300 border border-white/10">Criar Minha Conta</button>
+                </div>
+
+                <!-- Formulário: Admin -->
+                <div id="form-admin" class="hidden space-y-5 animate-[fadeIn_0.3s_ease-out]">
+                    <input type="password" id="admin-pass" placeholder="Senha" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-gray-800 focus:ring-0 dark:border-gray-600 bg-white/90 dark:bg-gray-700/90 outline-none transition-colors text-center text-lg shadow-inner">
+                    <button onclick="loginAdmin()" class="w-full bg-gradient-to-r from-gray-800 to-gray-700 dark:from-gray-700 dark:to-gray-600 text-white font-bold text-lg py-4 rounded-2xl hover:shadow-lg hover:shadow-gray-500/30 active:scale-95 transition-all duration-300 border border-white/10">Entrar no Painel</button>
+                </div>
+
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mt-6 bg-white/50 dark:bg-gray-800/50 p-3 rounded-xl border border-gray-100 dark:border-gray-700">Nota: O sistema salva os dados apenas no navegador (LocalStorage).</p>
+            </div>
+        </section>
+
+        <!-- Admin View -->
+        <section id="view-admin" class="view-section py-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="font-fredoka text-3xl font-bold text-gray-800 dark:text-white">Painel de Moderação</h2>
+                <button onclick="showView('view-home')" class="bg-white/80 dark:bg-gray-800 text-red-500 font-bold px-5 py-2 rounded-full hover:bg-red-50 hover:text-red-600 shadow-sm border border-red-100 dark:border-red-900/30 active:scale-95 transition-all duration-300">Sair com Segurança</button>
+            </div>
+            
+            <div class="bg-white/80 backdrop-blur-md dark:bg-gray-800/80 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50 overflow-x-auto">
+                <h3 class="font-bold text-xl mb-6 text-gray-800 dark:text-white">Mensagens Aguardando Aprovação</h3>
+                <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                        <tr class="border-b-2 border-gray-200/50 dark:border-gray-700/50">
+                            <th class="p-4 text-gray-500 dark:text-gray-400 font-bold">Destinatário</th>
+                            <th class="p-4 text-gray-500 dark:text-gray-400 font-bold">Mensagem</th>
+                            <th class="p-4 text-gray-500 dark:text-gray-400 font-bold">Status</th>
+                            <th class="p-4 text-gray-500 dark:text-gray-400 font-bold text-center">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body">
+                        <!-- Renderizado via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white/40 backdrop-blur-md dark:bg-gray-900/60 py-8 mt-12 border-t border-white/50 dark:border-gray-800 relative z-10">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm font-medium text-gray-600 dark:text-gray-400">
+            <div class="flex flex-wrap justify-center gap-6 mb-6">
+                <a href="#" class="hover:text-alergria-pink transition-colors duration-300">Sobre nós</a>
+                <a href="#" class="hover:text-alergria-blue transition-colors duration-300">Contato</a>
+                <a href="#" class="hover:text-alergria-orange transition-colors duration-300">Políticas de Privacidade</a>
+                <a href="#" class="hover:text-alergria-yellow hover:text-yellow-600 transition-colors duration-300">FAQ</a>
+            </div>
+            <p>&copy; 2026 Projeto AlerGria. Ambiente simulado - Não inserir dados reais.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Navegação ---
+        function showView(viewId) {
+            const currentView = document.querySelector('.view-section.active');
+            if (currentView && currentView.id === viewId) return;
+
+            const activateNew = () => {
+                const newView = document.getElementById(viewId);
+                newView.classList.add('active');
+                void newView.offsetWidth; 
+                newView.classList.add('fade-in');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                if(viewId === 'view-familiar' || viewId === 'view-admin' || viewId === 'view-paciente') {
+                    renderData();
+                }
+                
+                if(viewId === 'view-doar') {
+                    updatePaymentUI();
+                }
+            };
+
+            if (currentView) {
+                currentView.classList.remove('fade-in');
+                setTimeout(() => {
+                    currentView.classList.remove('active');
+                    activateNew();
+                }, 400); 
+            } else {
+                activateNew();
+            }
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // --- Jogos da Área de Diversão ---
+        let memoryCards = ['🐶', '🐶', '🐱', '🐱', '🦊', '🦊', '🐸', '🐸'];
+        let memoryFlipped = [];
+        
+        function loadGame(gameId) {
+            const container = document.getElementById('game-container');
+            container.classList.remove('hidden');
+            container.innerHTML = ''; 
+
+            if(gameId === 'memoria') {
+                memoryCards.sort(() => 0.5 - Math.random());
+                container.innerHTML = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-fredoka text-2xl text-alergria-blue">Jogo da Memória</h4>
+                        <button onclick="document.getElementById('game-container').classList.add('hidden')" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    </div>
+                    <div class="grid grid-cols-4 gap-4 max-w-sm mx-auto" id="memory-grid">
+                        ${memoryCards.map((emoji, i) => `<div class="memory-card hidden-card rounded-xl shadow-md" onclick="flipCard(this, '${emoji}')" data-index="${i}">?</div>`).join('')}
+                    </div>
+                `;
+            } 
+            else if(gameId === 'quiz') {
+                container.innerHTML = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-fredoka text-2xl text-alergria-pink">Quiz Divertido</h4>
+                        <button onclick="document.getElementById('game-container').classList.add('hidden')" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xl font-bold mb-6 dark:text-white">Qual animal é conhecido como o rei da selva?</p>
+                        <div class="space-y-3">
+                            <button onclick="alert('Quase lá! Tente de novo.')" class="block w-full p-4 rounded-xl border-2 border-gray-200 hover:border-alergria-pink hover:bg-pink-50 dark:hover:bg-gray-700 transition font-bold dark:text-white">Elefante</button>
+                            <button onclick="alert('Isso mesmo! O Leão é o rei da selva! 🦁')" class="block w-full p-4 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 dark:hover:bg-gray-700 transition font-bold dark:text-white">Leão</button>
+                            <button onclick="alert('Quase lá! Tente de novo.')" class="block w-full p-4 rounded-xl border-2 border-gray-200 hover:border-alergria-pink hover:bg-pink-50 dark:hover:bg-gray-700 transition font-bold dark:text-white">Tigre</button>
+                        </div>
+                    </div>
+                `;
+            }
+            else if(gameId === 'colorir') {
+                container.innerHTML = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-fredoka text-2xl text-alergria-orange">Desenho Livre</h4>
+                        <button onclick="document.getElementById('game-container').classList.add('hidden')" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    </div>
+                    <div class="flex justify-center space-x-4 mb-4">
+                        <button onclick="window.drawColor = '#FF5AAE'" class="w-10 h-10 rounded-full bg-alergria-pink shadow-md border-2 border-white"></button>
+                        <button onclick="window.drawColor = '#2F9BFF'" class="w-10 h-10 rounded-full bg-alergria-blue shadow-md border-2 border-white"></button>
+                        <button onclick="window.drawColor = '#FAEA53'" class="w-10 h-10 rounded-full bg-alergria-yellow shadow-md border-2 border-white"></button>
+                        <button onclick="window.drawColor = '#111827'" class="w-10 h-10 rounded-full bg-gray-900 shadow-md border-2 border-white"></button>
+                    </div>
+                    <div class="border-4 border-gray-200 rounded-3xl overflow-hidden bg-white cursor-crosshair max-w-full">
+                        <canvas id="draw-canvas" width="600" height="300" class="w-full bg-white"></canvas>
+                    </div>
+                `;
+                initCanvas();
+            }
+            else if(gameId === 'historias') {
+                container.innerHTML = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-fredoka text-2xl text-alergria-yellow">A Aventura da Estrela</h4>
+                        <button onclick="document.getElementById('game-container').classList.add('hidden')" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    </div>
+                    <div class="p-6 bg-yellow-50 dark:bg-gray-700 rounded-2xl">
+                        <p class="text-lg leading-relaxed dark:text-white">Era uma vez uma pequena estrela chamada Brilho. Brilho não era a maior estrela do céu, mas tinha o sorriso mais quente. Uma noite, ela viu um menino triste olhando pela janela. Brilho então decidiu brilhar o mais forte que podia, piscando em cores azuis, rosas e amarelas. O menino, ao ver aquele show de luzes, abriu um sorriso enorme. Brilho percebeu que não importa o tamanho que temos, sempre podemos iluminar o dia de alguém.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function initCanvas() {
+            const canvas = document.getElementById('draw-canvas');
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            window.drawColor = '#FF5AAE';
+
+            const startDraw = (e) => { isDrawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+            const draw = (e) => { if(!isDrawing) return; ctx.strokeStyle = window.drawColor; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); };
+            const stopDraw = () => { isDrawing = false; };
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('mouseleave', stopDraw);
+            
+            canvas.addEventListener('touchstart', (e) => { const rect = canvas.getBoundingClientRect(); const x = e.touches[0].clientX - rect.left; const y = e.touches[0].clientY - rect.top; isDrawing = true; ctx.beginPath(); ctx.moveTo(x, y); });
+            canvas.addEventListener('touchmove', (e) => { if(!isDrawing) return; e.preventDefault(); const rect = canvas.getBoundingClientRect(); const x = e.touches[0].clientX - rect.left; const y = e.touches[0].clientY - rect.top; ctx.strokeStyle = window.drawColor; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.lineTo(x, y); ctx.stroke(); });
+            canvas.addEventListener('touchend', stopDraw);
+        }
+
+        function flipCard(card, emoji) {
+            if(card.classList.contains('revealed') || memoryFlipped.length >= 2) return;
+            card.innerHTML = emoji;
+            card.classList.remove('hidden-card');
+            card.classList.add('revealed');
+            memoryFlipped.push(card);
+
+            if(memoryFlipped.length === 2) {
+                setTimeout(() => {
+                    if(memoryFlipped[0].innerHTML !== memoryFlipped[1].innerHTML) {
+                        memoryFlipped[0].innerHTML = '?'; memoryFlipped[0].classList.add('hidden-card'); memoryFlipped[0].classList.remove('revealed');
+                        memoryFlipped[1].innerHTML = '?'; memoryFlipped[1].classList.add('hidden-card'); memoryFlipped[1].classList.remove('revealed');
+                    }
+                    memoryFlipped = [];
+                }, 1000);
+            }
+        }
+
+        // --- Pagamentos ---
+        function updatePaymentUI() {
+            const method = document.getElementById('payment-method').value;
+            const details = document.getElementById('payment-details');
+            if(method === 'pix') {
+                const randomId = Math.random().toString(36).substring(2, 12).toUpperCase();
+                details.innerHTML = `
+                    <div class="text-center p-6 bg-white dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600 shadow-sm animate-[fadeIn_0.3s_ease-out]">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PixAlerGria_${randomId}" alt="QR Code Pix" class="mx-auto mb-4 rounded-lg shadow">
+                        <p class="text-xs font-bold text-gray-500 dark:text-gray-300 mb-2">Código Pix Copia e Cola:</p>
+                        <div class="bg-gray-100 dark:bg-gray-800 p-3 rounded-xl flex items-center justify-between">
+                            <span class="text-xs truncate text-gray-600 dark:text-gray-400 mr-2">00020126580014BR.GOV.BCB.PIX...${randomId}</span>
+                            <button type="button" onclick="alert('Código copiado!')" class="text-alergria-blue font-bold text-sm"><i class="fa-regular fa-copy"></i> Copiar</button>
+                        </div>
+                    </div>
+                `;
+            } else if(method === 'cartao') {
+                details.innerHTML = `
+                    <div class="space-y-4 p-6 bg-white dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600 shadow-sm animate-[fadeIn_0.3s_ease-out]">
+                        <div><label class="block text-xs font-bold mb-1 text-gray-500 dark:text-gray-300">Número do Cartão</label><input type="text" placeholder="0000 0000 0000 0000" maxlength="19" class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 outline-none focus:border-alergria-blue"></div>
+                        <div class="flex space-x-4"><div class="w-1/2"><label class="block text-xs font-bold mb-1 text-gray-500 dark:text-gray-300">Validade</label><input type="text" placeholder="MM/AA" maxlength="5" class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 outline-none focus:border-alergria-blue"></div><div class="w-1/2"><label class="block text-xs font-bold mb-1 text-gray-500 dark:text-gray-300">CVV</label><input type="text" placeholder="123" maxlength="4" class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 outline-none focus:border-alergria-blue"></div></div>
+                        <div><label class="block text-xs font-bold mb-1 text-gray-500 dark:text-gray-300">Nome no Cartão</label><input type="text" placeholder="NOME COMPLETO" class="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 outline-none focus:border-alergria-blue uppercase"></div>
+                    </div>
+                `;
+            } else {
+                details.innerHTML = `<div class="text-center p-6 bg-white dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600 shadow-sm animate-[fadeIn_0.3s_ease-out]"><i class="fa-solid fa-file-invoice text-4xl text-gray-400 mb-3"></i><p class="text-sm font-bold text-gray-600 dark:text-gray-300">O boleto será gerado no final do processo e enviado para o e-mail cadastrado.</p></div>`;
+            }
+        }
+
+        // --- Lógica de Dados Existente ---
+        let messages = JSON.parse(localStorage.getItem('alergria_msgs')) || [
+            { id: 1, code: 'Herói_01', text: 'Você é muito forte! Te amo.', status: 'Aprovado' }
+        ];
+
+        function saveMessages() {
+            localStorage.setItem('alergria_msgs', JSON.stringify(messages));
+            renderData();
+        }
+
+        function submitMessage(e) {
+            e.preventDefault();
+            const code = document.getElementById('msg-code').value;
+            const text = document.getElementById('msg-text').value;
+            messages.push({ id: Date.now(), code: code, text: text, status: 'Em análise' });
+            document.getElementById('msg-code').value = ''; document.getElementById('msg-text').value = '';
+            saveMessages(); alert('Mensagem enviada com sucesso! Aguardando aprovação da equipe.');
+        }
+
+        function renderData() {
+            const familyList = document.getElementById('family-status-list');
+            if(familyList) {
+                familyList.innerHTML = messages.map(m => `
+                    <div class="p-5 bg-white/90 dark:bg-gray-800/90 rounded-2xl border-l-8 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-x-1 ${m.status === 'Aprovado' ? 'border-green-400' : 'border-alergria-yellow'} backdrop-blur-sm">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="font-bold text-gray-800 dark:text-gray-100">Para: ${m.code}</p>
+                            <span class="text-xs font-bold px-3 py-1 rounded-full ${m.status === 'Aprovado' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${m.status}</span>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300">"${m.text}"</p>
+                    </div>
+                `).reverse().join('');
+            }
+
+            const adminBody = document.getElementById('admin-table-body');
+            if(adminBody) {
+                adminBody.innerHTML = messages.map(m => `
+                    <tr class="border-b border-gray-200/50 dark:border-gray-700/50 hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors">
+                        <td class="p-4 font-bold text-gray-800 dark:text-gray-200">${m.code}</td>
+                        <td class="p-4 text-gray-600 dark:text-gray-300">"${m.text}"</td>
+                        <td class="p-4"><span class="px-3 py-1 text-xs font-bold rounded-full ${m.status === 'Aprovado' ? 'bg-green-100 text-green-700' : (m.status === 'Recusado' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700')}">${m.status}</span></td>
+                        <td class="p-4 text-center">
+                            ${m.status === 'Em análise' ? `
+                                <div class="flex justify-center space-x-2">
+                                    <button onclick="updateStatus(${m.id}, 'Aprovado')" class="text-green-600 bg-green-100 hover:bg-green-200 w-10 h-10 rounded-full shadow-sm hover:shadow active:scale-90 transition-all border border-green-200"><i class="fa-solid fa-check"></i></button>
+                                    <button onclick="updateStatus(${m.id}, 'Recusado')" class="text-red-600 bg-red-100 hover:bg-red-200 w-10 h-10 rounded-full shadow-sm hover:shadow active:scale-90 transition-all border border-red-200"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                            ` : '-'}
+                        </td>
+                    </tr>
+                `).reverse().join('');
+            }
+
+            const patientBox = document.getElementById('patient-messages');
+            if(patientBox) {
+                const approved = messages.filter(m => m.status === 'Aprovado');
+                patientBox.innerHTML = approved.length > 0 ? approved.map(m => `
+                    <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-2 border-alergria-pink/30 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-alergria-pink/20 hover:border-alergria-pink transition-all duration-300 backdrop-blur-sm">
+                        <div class="flex items-center text-alergria-pink mb-4 bg-pink-50 dark:bg-pink-900/30 w-max px-4 py-2 rounded-full border border-pink-100 dark:border-pink-900/50">
+                            <i class="fa-solid fa-heart mr-2 animate-pulse"></i> <span class="font-bold">Para: ${m.code}</span>
+                        </div>
+                        <p class="text-xl font-medium text-gray-700 dark:text-gray-200 leading-relaxed">"${m.text}"</p>
+                    </div>
+                `).reverse().join('') : '<p class="text-gray-500 col-span-2 text-center p-8 bg-white/50 dark:bg-gray-800/50 rounded-3xl font-medium border border-white/40">Nenhuma mensagem nova no momento. Logo chegará muito carinho!</p>';
+            }
+        }
+
+        function updateStatus(id, newStatus) {
+            const msg = messages.find(m => m.id === id);
+            if(msg) { msg.status = newStatus; saveMessages(); }
+        }
+
+        // --- SISTEMA DE LOGIN ATUALIZADO ---
+        function toggleLogin(type) {
+            const tabUser = document.getElementById('tab-user');
+            const tabAdmin = document.getElementById('tab-admin');
+            const formUser = document.getElementById('form-user');
+            const formAdmin = document.getElementById('form-admin');
+
+            if(type === 'user') {
+                formUser.classList.remove('hidden');
+                formAdmin.classList.add('hidden');
+                tabUser.classList.add('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
+                tabUser.classList.remove('text-gray-500');
+                tabAdmin.classList.remove('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
+                tabAdmin.classList.add('text-gray-500');
+            } else {
+                formAdmin.classList.remove('hidden');
+                formUser.classList.add('hidden');
+                tabAdmin.classList.add('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
+                tabAdmin.classList.remove('text-gray-500');
+                tabUser.classList.remove('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue');
+                tabUser.classList.add('text-gray-500');
+            }
+        }
+
+        function registerUser() {
+            const email = document.getElementById('user-email').value;
+            const pass = document.getElementById('user-pass').value;
+            if(email && pass) {
+                // Simula o salvamento no banco de dados através do LocalStorage
+                let users = JSON.parse(localStorage.getItem('alergria_users')) || [];
+                users.push({email: email, password: pass});
+                localStorage.setItem('alergria_users', JSON.stringify(users));
+                
+                alert('Conta criada com sucesso! Seja bem-vindo(a) ao Projeto AlerGria.');
+                document.getElementById('user-email').value = '';
+                document.getElementById('user-pass').value = '';
+                showView('view-home');
+            } else {
+                alert('Por favor, preencha o seu e-mail e crie uma senha.');
+            }
+        }
+
+        function loginAdmin() {
+            const pass = document.getElementById('admin-pass').value;
+            if(pass === 'BancaSenai') {
+                document.getElementById('admin-pass').value = '';
+                showView('view-admin');
+            } else {
+                alert('Senha incorreta! Acesso negado.');
+            }
+        }
+
+        // Init App
+        updatePaymentUI();
+    </script>
+</body>
+</html>
