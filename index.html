@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -62,6 +61,10 @@
         .pcp-log-scroll::-webkit-scrollbar-track { background: transparent; }
         .pcp-log-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .dark .pcp-log-scroll::-webkit-scrollbar-thumb { background-color: #475569; }
+        
+        /* Estilização para o campo select */
+        select option { background: white; color: #374151; }
+        .dark select option { background: #1f2937; color: #f3f4f6; }
     </style>
 </head>
 <body class="font-nunito text-gray-800 dark:text-gray-100 transition-colors duration-500 relative overflow-x-hidden min-h-screen bg-fixed bg-gradient-to-br from-alergria-blue/15 via-alergria-pink/10 to-alergria-yellow/15 dark:from-alergria-blue/20 dark:via-gray-900 dark:to-alergria-orange/10">
@@ -110,21 +113,73 @@
 
         <!-- FÁBRICA / CRIAÇÃO DE URSO 3D -->
         <section id="view-paciente" class="view-section py-8">
-            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-orange font-bold bg-white/70 dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm" onclick="showView('view-home')"><i class="fa-solid fa-arrow-left mr-2"></i> Voltar ao Dashboard</div>
+            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-orange font-bold bg-white/70 dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm hover:-translate-x-2 transition-transform" onclick="showView('view-home')"><i class="fa-solid fa-arrow-left mr-2"></i> Voltar ao Dashboard</div>
             <div class="text-center mb-10"><h2 class="font-fredoka text-4xl font-bold text-alergria-orange mb-3">Linha de Montagem de Ursos</h2><p class="text-gray-600 dark:text-gray-300">Construa o seu companheiro em 3D, grave um áudio e gere a sua Ordem de Produção!</p></div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Modelo 3D -->
-                <div class="bg-white/80 dark:bg-gray-800/80 p-4 rounded-3xl shadow-xl h-[650px] flex flex-col border border-white/40 dark:border-gray-700/50">
+                <div class="bg-white/80 dark:bg-gray-800/80 p-4 rounded-3xl shadow-xl h-full min-h-[650px] flex flex-col border border-white/40 dark:border-gray-700/50">
                     <div class="flex justify-between items-center px-4 py-2 mb-2"><span class="font-bold text-gray-500 text-sm"><i class="fa-solid fa-rotate mr-2"></i>Girar</span><span class="font-bold text-gray-500 text-sm"><i class="fa-solid fa-magnifying-glass mr-2"></i>Zoom</span></div>
                     <div id="bear-3d-container" class="w-full flex-1 bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-900 rounded-2xl cursor-move shadow-inner"></div>
                 </div>
 
                 <div class="space-y-5">
-                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-alergria-blue mb-4">1. Especificação de Cor</h3><div class="flex flex-wrap gap-4"><button onclick="changeBearColor(0x8B4513)" class="w-12 h-12 rounded-full bg-[#8B4513] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0xFFB6C1)" class="w-12 h-12 rounded-full bg-[#FFB6C1] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0x87CEEB)" class="w-12 h-12 rounded-full bg-[#87CEEB] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0xFFE4B5)" class="w-12 h-12 rounded-full bg-[#FFE4B5] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0xE6E6FA)" class="w-12 h-12 rounded-full bg-[#E6E6FA] border-4 border-white shadow-md hover:scale-110 transition-transform"></button></div></div>
-                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-alergria-pink mb-4">2. Padrão de Estampa</h3><div class="grid grid-cols-3 gap-4"><button onclick="changeBearPattern('nenhuma')" class="py-3 px-4 bg-gray-100 dark:bg-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300">Lisa</button><button onclick="changeBearPattern('bolinhas')" class="py-3 px-4 bg-pink-50 dark:bg-pink-900/30 rounded-xl font-bold text-alergria-pink">Bolinhas</button><button onclick="changeBearPattern('listras')" class="py-3 px-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl font-bold text-alergria-blue">Listras</button></div></div>
-                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-red-500 mb-4">3. Upload de Hardware (Áudio)</h3><div class="flex space-x-4"><button id="btn-record" onclick="startRecording()" class="flex-1 bg-red-100 text-red-600 font-bold py-3 px-6 rounded-xl hover:bg-red-200 transition-colors"><i class="fa-solid fa-microphone mr-2"></i> Iniciar Gravação</button><button id="btn-stop" onclick="stopRecording()" class="flex-1 hidden recording font-bold py-3 px-6 rounded-xl text-white"><i class="fa-solid fa-stop mr-2"></i> Parar</button></div><button id="play-audio-btn" onclick="playBearAudio()" class="hidden w-full mt-4 bg-red-50 text-red-500 border border-red-200 font-bold py-3 rounded-xl hover:bg-red-100 transition-colors"><i class="fa-solid fa-play mr-2"></i> Testar Reprodução do Chip</button></div>
-                    <div class="bg-gradient-to-r from-green-50 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 p-6 rounded-3xl shadow-lg border border-green-200 dark:border-green-800"><h3 class="font-fredoka text-xl font-bold text-green-700 dark:text-green-400 mb-4">4. Emissão de Ordem (OP)</h3><p class="text-sm text-green-800 dark:text-green-300 mb-4">Ao finalizar, o sistema ERP irá gerar um código de rastreio para acompanhar a esterilização e envio do urso.</p><button onclick="finalizarPedido()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-md transition-colors text-lg active:scale-95"><i class="fa-solid fa-check-double mr-2"></i> Finalizar Pedido</button></div>
+                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50">
+                        <h3 class="font-fredoka text-xl font-bold text-alergria-blue mb-4">1. Especificação de Cor</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="changeBearColor(0x8B4513)" class="w-12 h-12 rounded-full bg-[#8B4513] border-4 border-white dark:border-gray-700 shadow-md hover:scale-110 transition-transform"></button>
+                            <button onclick="changeBearColor(0xFFB6C1)" class="w-12 h-12 rounded-full bg-[#FFB6C1] border-4 border-white dark:border-gray-700 shadow-md hover:scale-110 transition-transform"></button>
+                            <button onclick="changeBearColor(0x87CEEB)" class="w-12 h-12 rounded-full bg-[#87CEEB] border-4 border-white dark:border-gray-700 shadow-md hover:scale-110 transition-transform"></button>
+                            <button onclick="changeBearColor(0xFFE4B5)" class="w-12 h-12 rounded-full bg-[#FFE4B5] border-4 border-white dark:border-gray-700 shadow-md hover:scale-110 transition-transform"></button>
+                            <button onclick="changeBearColor(0xE6E6FA)" class="w-12 h-12 rounded-full bg-[#E6E6FA] border-4 border-white dark:border-gray-700 shadow-md hover:scale-110 transition-transform"></button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50">
+                        <h3 class="font-fredoka text-xl font-bold text-alergria-pink mb-4">2. Padrão de Estampa</h3>
+                        <div class="grid grid-cols-3 gap-4">
+                            <button onclick="changeBearPattern('nenhuma')" class="py-3 px-4 bg-gray-100 dark:bg-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300 transition-colors hover:bg-gray-200 dark:hover:bg-gray-600">Lisa</button>
+                            <button onclick="changeBearPattern('bolinhas')" class="py-3 px-4 bg-pink-50 dark:bg-pink-900/30 rounded-xl font-bold text-alergria-pink transition-colors hover:bg-pink-100 dark:hover:bg-pink-900/50">Bolinhas</button>
+                            <button onclick="changeBearPattern('listras')" class="py-3 px-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl font-bold text-alergria-blue transition-colors hover:bg-blue-100 dark:hover:bg-blue-900/50">Listras</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50">
+                        <h3 class="font-fredoka text-xl font-bold text-red-500 mb-4">3. Upload de Hardware (Áudio)</h3>
+                        <div class="flex space-x-4">
+                            <button id="btn-record" onclick="startRecording()" class="flex-1 bg-red-100 text-red-600 font-bold py-3 px-6 rounded-xl hover:bg-red-200 transition-colors"><i class="fa-solid fa-microphone mr-2"></i> Iniciar Gravação</button>
+                            <button id="btn-stop" onclick="stopRecording()" class="flex-1 hidden recording font-bold py-3 px-6 rounded-xl text-white"><i class="fa-solid fa-stop mr-2"></i> Parar</button>
+                        </div>
+                        <button id="play-audio-btn" onclick="playBearAudio()" class="hidden w-full mt-4 bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 border border-red-200 dark:border-red-900/50 font-bold py-3 rounded-xl hover:bg-red-100 transition-colors"><i class="fa-solid fa-play mr-2"></i> Testar Reprodução do Chip</button>
+                    </div>
+
+                    <!-- NOVO: PASSO 4 (Destinatário e Roteirização) -->
+                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50">
+                        <h3 class="font-fredoka text-xl font-bold text-alergria-orange mb-4">4. Destinatário e Local</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Criança (Paciente)</label>
+                                <select id="paciente-nome" class="w-full p-3 rounded-xl border border-gray-200 focus:border-alergria-orange bg-gray-50 dark:bg-gray-700 outline-none text-gray-700 dark:text-gray-200 font-semibold cursor-pointer">
+                                    <option value="">Selecione o nome...</option>
+                                    <!-- Injetado via JS -->
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Unidade Hospitalar (RJ)</label>
+                                <select id="paciente-hospital" class="w-full p-3 rounded-xl border border-gray-200 focus:border-alergria-orange bg-gray-50 dark:bg-gray-700 outline-none text-gray-700 dark:text-gray-200 font-semibold cursor-pointer">
+                                    <option value="">Selecione o hospital...</option>
+                                    <!-- Injetado via JS -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PASSO 5: EMISSÃO OP -->
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 p-6 rounded-3xl shadow-lg border border-green-200 dark:border-green-800">
+                        <h3 class="font-fredoka text-xl font-bold text-green-700 dark:text-green-400 mb-4">5. Emissão de Ordem (OP)</h3>
+                        <p class="text-sm text-green-800 dark:text-green-300 mb-4">Ao finalizar, o sistema ERP irá gerar um código de rastreio para acompanhar a esterilização e o roteamento logístico.</p>
+                        <button onclick="finalizarPedido()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-md transition-colors text-lg active:scale-95"><i class="fa-solid fa-check-double mr-2"></i> Emitir Ordem de Produção</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -222,13 +277,11 @@
                     <button onclick="toggleLogin('cliente-login')" id="tab-cliente-login" class="w-1/2 py-2.5 rounded-full font-bold bg-white dark:bg-gray-800 shadow-sm text-alergria-blue transition-all text-sm">Cliente (Familiar)</button>
                     <button onclick="toggleLogin('admin-login')" id="tab-admin-login" class="w-1/2 py-2.5 rounded-full font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-all text-sm">Admin (PCP)</button>
                 </div>
-                <!-- Login Cliente -->
                 <div id="form-cliente-login" class="space-y-5 animate-[fadeIn_0.3s_ease-out]">
                     <h3 class="font-bold text-gray-700 dark:text-gray-200 mb-2">Simulação de Conta Cliente</h3>
                     <input type="email" id="login-email" placeholder="O seu e-mail" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue bg-white dark:bg-gray-700 outline-none text-center">
                     <button onclick="loginUser(event)" class="w-full bg-gradient-to-r from-alergria-blue to-blue-500 text-white font-bold py-4 rounded-2xl hover:shadow-lg active:scale-95 transition-all">Aceder à Minha Conta</button>
                 </div>
-                <!-- Login Admin -->
                 <div id="form-admin-login" class="hidden space-y-5 animate-[fadeIn_0.3s_ease-out]">
                     <h3 class="font-bold text-gray-700 dark:text-gray-200 mb-2">Dashboard de Logística Diretoria</h3>
                     <input type="text" id="admin-user" placeholder="ID de Gestor" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-gray-800 bg-white dark:bg-gray-700 outline-none text-center">
@@ -259,7 +312,6 @@
                     <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wide">Aguardando Envio</p>
                     <div class="flex items-end justify-between"><h3 class="text-4xl font-black text-gray-800 dark:text-white">32</h3><span class="text-alergria-blue text-sm font-bold"><i class="fa-solid fa-truck"></i> Hoje</span></div>
                 </div>
-                <!-- CARD SLA CLICÁVEL -->
                 <div onclick="showView('view-sla-analysis')" class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-alergria-pink cursor-pointer transform hover:-translate-y-1 hover:shadow-lg transition-all group relative">
                     <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wide group-hover:text-alergria-pink transition-colors">Entregas no Prazo <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs opacity-50"></i></p>
                     <div class="flex items-end justify-between"><h3 class="text-4xl font-black text-gray-800 dark:text-white">99.2%</h3><span class="text-green-500 text-sm font-bold"><i class="fa-solid fa-check-double"></i> SLA</span></div>
@@ -275,14 +327,14 @@
                 <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
                     <h3 class="font-bold text-xl text-gray-800 dark:text-white mb-4">Fila de Novos Pedidos</h3>
                     <div class="flex-1 overflow-y-auto pr-2 space-y-4">
-                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600"><div class="flex justify-between items-start mb-2"><span class="font-bold text-sm text-alergria-blue">#PED-8801</span><span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-md font-bold">Produção</span></div><p class="text-sm font-bold text-gray-800 dark:text-gray-200">Urso 3D: Azul (Listras)</p><p class="text-xs text-gray-500 mb-3">Cliente: Rayane Ribeiro</p></div>
-                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600"><div class="flex justify-between items-start mb-2"><span class="font-bold text-sm text-alergria-blue">#PED-8802</span><span class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-md font-bold">Esterilização</span></div><p class="text-sm font-bold text-gray-800 dark:text-gray-200">Urso 3D: Rosa (Bolinhas)</p><p class="text-xs text-gray-500 mb-3">Cliente: Larissa Mansur</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600"><div class="flex justify-between items-start mb-2"><span class="font-bold text-sm text-alergria-blue">#PED-8801</span><span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-md font-bold">Produção</span></div><p class="text-sm font-bold text-gray-800 dark:text-gray-200">Urso 3D: Azul (Listras)</p><p class="text-xs text-gray-500 mb-3">Destino: Arthur - INCA</p></div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-600"><div class="flex justify-between items-start mb-2"><span class="font-bold text-sm text-alergria-blue">#PED-8802</span><span class="text-xs bg-pink-100 text-pink-700 px-2 py-1 rounded-md font-bold">Esterilização</span></div><p class="text-sm font-bold text-gray-800 dark:text-gray-200">Urso 3D: Rosa (Bolinhas)</p><p class="text-xs text-gray-500 mb-3">Destino: Alice - Copa D'Or</p></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- NOVO: ANÁLISE DE SLA E GARGALOS LOGÍSTICOS (Aba Explicativa RCA) -->
+        <!-- ANÁLISE DE SLA E GARGALOS LOGÍSTICOS (RCA) -->
         <section id="view-sla-analysis" class="view-section py-8">
             <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-blue font-bold bg-white/70 dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm hover:text-blue-700 transition-colors border border-white/40 dark:border-gray-700/50" onclick="showView('view-admin')">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Voltar ao Dashboard PCP
@@ -294,44 +346,27 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <!-- Gráfico de Rosca -->
                 <div class="bg-white/90 dark:bg-gray-800/90 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 flex flex-col items-center justify-center">
                     <h3 class="font-bold text-xl text-gray-800 dark:text-white mb-6 text-center">Matriz de Gargalos Logísticos</h3>
-                    <div class="relative w-full max-w-[350px] aspect-square">
-                        <canvas id="slaChart"></canvas>
-                    </div>
+                    <div class="relative w-full max-w-[350px] aspect-square"><canvas id="slaChart"></canvas></div>
                     <p class="text-xs text-gray-400 mt-6 text-center italic">*Baseado nos registos ERP dos últimos 30 dias de produção.</p>
                 </div>
-
-                <!-- Explicações Técnicas (RCA) -->
                 <div class="space-y-6">
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-alergria-pink flex items-start space-x-4">
                         <div class="bg-pink-100 dark:bg-pink-900/30 text-alergria-pink p-3 rounded-xl text-2xl"><i class="fa-solid fa-microchip"></i></div>
-                        <div>
-                            <h4 class="font-bold text-gray-800 dark:text-white text-lg">45% - Sincronização de Áudio (EPROM)</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">A principal causa de atraso. Falhas na conversão dos ficheiros de áudio recebidos pelo site para o formato aceitável pelo chip eletrónico, forçando o <i>re-flash</i> manual do hardware.</p>
-                        </div>
+                        <div><h4 class="font-bold text-gray-800 dark:text-white text-lg">45% - Sincronização de Áudio (EPROM)</h4><p class="text-sm text-gray-600 dark:text-gray-300 mt-1">A principal causa de atraso. Falhas na conversão dos ficheiros de áudio recebidos pelo site para o formato aceitável pelo chip eletrónico, forçando o <i>re-flash</i> manual do hardware.</p></div>
                     </div>
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-teal-500 flex items-start space-x-4">
                         <div class="bg-teal-50 dark:bg-teal-900/30 text-teal-500 p-3 rounded-xl text-2xl"><i class="fa-solid fa-viruses"></i></div>
-                        <div>
-                            <h4 class="font-bold text-gray-800 dark:text-white text-lg">30% - Fila de Assepsia (Câmara UV-C)</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Saturação da capacidade. Em picos de procura, a câmara de ultravioleta e ozónio atingiu o seu limite físico de lotes simultâneos (gargalo de *throughput*), atrasando o *Lead Time*.</p>
-                        </div>
+                        <div><h4 class="font-bold text-gray-800 dark:text-white text-lg">30% - Fila de Assepsia (Câmara UV-C)</h4><p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Saturação da capacidade. Em picos de procura, a câmara de ultravioleta e ozónio atingiu o seu limite físico de lotes simultâneos (gargalo de *throughput*), atrasando o *Lead Time*.</p></div>
                     </div>
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-alergria-orange flex items-start space-x-4">
                         <div class="bg-orange-50 dark:bg-orange-900/30 text-alergria-orange p-3 rounded-xl text-2xl"><i class="fa-solid fa-truck-fast"></i></div>
-                        <div>
-                            <h4 class="font-bold text-gray-800 dark:text-white text-lg">15% - Logística Externa (*Last-Mile*)</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Imprevistos de roteirização externa. Atrasos causados por tráfego urbano pesado ou pela demora nas docas de receção hospitalar aquando da entrega dos donativos estéreis.</p>
-                        </div>
+                        <div><h4 class="font-bold text-gray-800 dark:text-white text-lg">15% - Logística Externa (*Last-Mile*)</h4><p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Imprevistos de roteirização externa. Atrasos causados por tráfego urbano pesado ou pela demora nas docas de receção hospitalar aquando da entrega dos donativos estéreis.</p></div>
                     </div>
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-alergria-blue flex items-start space-x-4">
                         <div class="bg-blue-50 dark:bg-blue-900/30 text-alergria-blue p-3 rounded-xl text-2xl"><i class="fa-solid fa-scissors"></i></div>
-                        <div>
-                            <h4 class="font-bold text-gray-800 dark:text-white text-lg">10% - Reprovação de Qualidade (QC)</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Urso retido na inspeção visual. Durante o teste de tração, as costuras apresentaram fragilidade, exigindo que a unidade voltasse para a máquina de costura (retrabalho produtivo).</p>
-                        </div>
+                        <div><h4 class="font-bold text-gray-800 dark:text-white text-lg">10% - Reprovação de Qualidade (QC)</h4><p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Urso retido na inspeção visual. Durante o teste de tração, as costuras apresentaram fragilidade, exigindo que a unidade voltasse para a máquina de costura (retrabalho produtivo).</p></div>
                     </div>
                 </div>
             </div>
@@ -340,34 +375,30 @@
     </main>
 
     <!-- MODAIS DO SISTEMA -->
-    <!-- Modal Pedido Sucesso -->
     <div id="modal-pedido-sucesso" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/80 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-sm w-full relative transform scale-95 transition-transform duration-300 border-t-8 border-green-500" id="modal-pedido-content">
             <div class="text-center mb-6"><i class="fa-solid fa-circle-check text-5xl text-green-500 mb-4"></i><h3 class="font-fredoka text-2xl font-bold text-gray-800 dark:text-white">Ordem Gerada!</h3></div>
-            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 text-center mb-6"><p class="text-xs text-gray-500 dark:text-gray-300 uppercase font-bold mb-1">Rastreio</p><h4 id="lbl-codigo-gerado" class="font-mono text-3xl font-black text-alergria-blue">URSO-0000</h4></div>
+            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 text-center mb-4"><p class="text-xs text-gray-500 dark:text-gray-300 uppercase font-bold mb-1">Rastreio</p><h4 id="lbl-codigo-gerado" class="font-mono text-3xl font-black text-alergria-blue">URSO-0000</h4></div>
+            <div class="text-center text-sm font-bold text-gray-600 dark:text-gray-300 mb-6 bg-gray-50 dark:bg-gray-800 p-2 rounded-lg" id="lbl-destinatario-sucesso"></div>
             <button onclick="irParaRastreio()" class="w-full bg-alergria-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition-colors shadow-lg active:scale-95">Rastrear Agora</button>
             <button onclick="closePedidoModal()" class="w-full mt-3 text-gray-500 dark:text-gray-400 font-bold py-2">Fechar</button>
         </div>
     </div>
     
-    <!-- Modal Laudo de Assepsia -->
     <div id="modal-laudo" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/80 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-lg w-full relative transform scale-95 transition-transform duration-300 border-t-8 border-teal-500" id="modal-laudo-content">
             <button onclick="closeLaudoModal()" class="absolute top-4 right-5 text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button>
-            <div class="text-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><i class="fa-solid fa-shield-virus text-4xl text-teal-500 mb-2"></i><h3 class="font-fredoka text-2xl font-bold text-gray-800 dark:text-white">Laudo de Esterilização</h3></div>
+            <div class="text-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><i class="fa-solid fa-shield-virus text-4xl text-teal-500 mb-2"></i><h3 class="font-fredoka text-2xl font-bold text-gray-800 dark:text-white">Laudo de Esterilização</h3><p class="text-xs text-gray-500 uppercase tracking-widest mt-1 font-bold">Certificado Técnico de Qualidade</p></div>
             <div class="space-y-4 text-sm text-gray-700 dark:text-gray-300 mb-6">
                 <div class="flex justify-between border-b border-gray-100 dark:border-gray-700 border-dashed pb-2"><span class="font-bold">Lote:</span> <span class="font-mono font-bold text-alergria-blue" id="laudo-id-lote">URSO-XXXX</span></div>
                 <div class="flex justify-between border-b border-gray-100 dark:border-gray-700 border-dashed pb-2"><span class="font-bold">Método:</span> <span>UV-C + Ozônio</span></div>
                 <div class="flex justify-between border-b border-gray-100 dark:border-gray-700 border-dashed pb-2"><span class="font-bold">Tempo:</span> <span>45 Min</span></div>
                 <div class="flex justify-between border-b border-gray-100 dark:border-gray-700 border-dashed pb-2"><span class="font-bold">Eficácia:</span> <span class="text-green-500 font-bold">99.99%</span></div>
             </div>
-            <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl flex items-center justify-center border border-green-200 dark:border-green-800">
-                <i class="fa-solid fa-check-circle text-green-500 text-xl mr-2"></i><span class="font-bold text-green-700 dark:text-green-400">Padrão Hospitalar Aprovado</span>
-            </div>
+            <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl flex items-center justify-center border border-green-200 dark:border-green-800"><i class="fa-solid fa-check-circle text-green-500 text-xl mr-2"></i><span class="font-bold text-green-700 dark:text-green-400">Padrão Hospitalar Aprovado</span></div>
         </div>
     </div>
 
-    <!-- Modal Fluxograma PCP -->
     <div id="modal-fluxograma" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-md w-full relative transform scale-95 transition-transform duration-300" id="modal-content">
             <button onclick="closeModal()" class="absolute top-4 right-5 text-gray-400 hover:text-red-500 text-2xl transition-colors"><i class="fa-solid fa-xmark"></i></button>
@@ -379,9 +410,21 @@
     </div>
 
     <script>
+        // --- NOME E HOSPITAIS (Injeção via JS) ---
+        const nomesCriancas = ["Miguel","Arthur","Gael","Heitor","Theo","Davi","Gabriel","Bernardo","Samuel","João Miguel","Enzo Gabriel","Alice","Helena","Laura","Maria Alice","Valentina","Heloísa","Maria Clara","Maria Cecília","Cecília","Sophia","Júlia","Lorena","Lívia","Manuela","Pedro","Lorenzo","Isaac","Benjamin","Matheus","Lucas","Nicolas","Joaquim","Henrique","Zion","Levi","Felipe","Antônio","Vicente","Estêvão","Isabella","Isadora","Maitê","Antonella","Sarah","Isabelly","Melissa","Catarina","Beatriz","Emanuelly","Bento","Noah","Emanuel","João","Rafael","Daniel","Lucca","Enzo","João Pedro","Pietro","Leonardo","Cauã","Gustavo","Eduardo","Anthony","Lara","Mirella","Eloá","Clara","Ana Clara","Ana Júlia","Marina","Ester","Lavínia","Yasmin","Luna","Camila","Vitória","Mariana","Letícia","Agatha","Murilo","Vitor","Pedro Henrique","Caleb","João Lucas","Luiz Miguel","Bryan","Enrico","Benício","Henry","Rebeca","Ana Luiza","Isabel","Alícia","Ana","Malu","Igor","Thiago","Fernando","Bárbara"];
+        const hospitaisRJ = ["INCA - Instituto Nacional de Câncer", "Hospital Municipal Souza Aguiar", "Hospital Municipal Miguel Couto", "Hospital Municipal Salgado Filho", "Hospital Municipal Lourenço Jorge", "Hospital Copa D'Or", "Hospital Barra D'Or", "Hospital Quinta D'Or", "Hospital Norte D'Or", "Hospital Copa Star", "Hospital São Lucas Copacabana", "Hospital Samaritano Botafogo", "Hospital Samaritano Barra", "Hospital Vitória", "Hospital Pasteur", "Hospital Rio Mar", "Casa de Saúde São José", "Complexo Hospitalar de Niterói (CHN)", "Hospital de Clínicas de Jacarepaguá", "Hospital da Lagoa"];
+
+        function popularCampos() {
+            const selectNome = document.getElementById('paciente-nome');
+            const selectHosp = document.getElementById('paciente-hospital');
+            if(selectNome && selectNome.options.length <= 1) {
+                nomesCriancas.sort().forEach(nome => selectNome.add(new Option(nome, nome)));
+                hospitaisRJ.sort().forEach(hosp => selectHosp.add(new Option(hosp, hosp)));
+            }
+        }
+
         // --- NAVEGAÇÃO SPA ---
         let currentOrderCode = '';
-
         function showView(viewId) {
             const currentView = document.querySelector('.view-section.active');
             if (currentView && currentView.id === viewId) return;
@@ -394,57 +437,47 @@
                     newView.classList.add('fade-in');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     
-                    // Inicialização de Módulos Específicos
-                    if(viewId === 'view-paciente') setTimeout(initBear3D, 100);
+                    if(viewId === 'view-paciente') { setTimeout(initBear3D, 100); popularCampos(); }
                     if(viewId === 'view-admin') setTimeout(initPCPChart, 300);
                     if(viewId === 'view-sla-analysis') setTimeout(initSLAChart, 300);
                 }
             };
-
-            if (currentView) {
-                currentView.classList.remove('fade-in');
-                setTimeout(() => { currentView.classList.remove('active'); activateNew(); }, 400); 
+            if (currentView) { currentView.classList.remove('fade-in'); setTimeout(() => { currentView.classList.remove('active'); activateNew(); }, 400); 
             } else activateNew();
         }
 
         function toggleTheme() { document.documentElement.classList.toggle('dark'); }
 
-        // --- GRÁFICO: ANÁLISE DE SLA (Doughnut Chart) ---
+        // --- GRÁFICO: ANÁLISE DE SLA ---
         let slaChartInstance = null;
         function initSLAChart() {
             const ctx = document.getElementById('slaChart');
             if(!ctx) return;
             if(slaChartInstance) slaChartInstance.destroy();
-            
             slaChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Falha Chip (Áudio)', 'Fila UV-C', 'Last-Mile', 'Reprovação QC'],
                     datasets: [{
-                        data: [45, 30, 15, 10],
-                        backgroundColor: ['#FF5AAE', '#14b8a6', '#FF8200', '#2F9BFF'],
-                        borderWidth: 3,
-                        borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
-                        hoverOffset: 8
+                        data: [45, 30, 15, 10], backgroundColor: ['#FF5AAE', '#14b8a6', '#FF8200', '#2F9BFF'],
+                        borderWidth: 3, borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff', hoverOffset: 8
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '65%',
-                    plugins: {
-                        legend: { position: 'bottom', labels: { font: { family: 'Nunito', weight: 'bold' }, padding: 15 } },
-                        tooltip: { callbacks: { label: function(c) { return ' ' + c.label + ': ' + c.parsed + '%'; } } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { font: { family: 'Nunito', weight: 'bold' }, padding: 15 } }, tooltip: { callbacks: { label: function(c) { return ' ' + c.label + ': ' + c.parsed + '%'; } } } } }
             });
         }
 
         // --- LÓGICA DE PEDIDOS E RASTREIO ---
         function finalizarPedido() {
+            const nome = document.getElementById('paciente-nome').value;
+            const hosp = document.getElementById('paciente-hospital').value;
+            if(!nome || !hosp) { alert('Atenção: Selecione o nome da criança e o hospital de destino antes de emitir a OP.'); return; }
+
             const rand = Math.floor(1000 + Math.random() * 9000);
             currentOrderCode = `URSO-${rand}`;
             document.getElementById('lbl-codigo-gerado').innerText = currentOrderCode;
+            document.getElementById('lbl-destinatario-sucesso').innerText = `Destino: ${nome} - ${hosp}`;
+
             const modal = document.getElementById('modal-pedido-sucesso');
             modal.classList.remove('hidden'); modal.classList.add('flex');
             setTimeout(() => { document.getElementById('modal-pedido-content').classList.remove('scale-95'); document.getElementById('modal-pedido-content').classList.add('scale-100'); }, 10);
@@ -561,7 +594,7 @@
         }
 
         let mediaRecorder, audioChunks = [], bearAudio = new Audio();
-        async function startRecording() { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); mediaRecorder = new MediaRecorder(stream); audioChunks = []; mediaRecorder.ondataavailable = e => audioChunks.push(e.data); mediaRecorder.onstop = () => { bearAudio.src = URL.createObjectURL(new Blob(audioChunks, { type: 'audio/mp3' })); document.getElementById('play-audio-btn').classList.remove('hidden'); }; mediaRecorder.start(); document.getElementById('btn-record').classList.add('hidden'); document.getElementById('btn-stop').classList.remove('hidden'); } catch(err) { alert('Permita o uso do microfone!'); } }
+        async function startRecording() { try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); mediaRecorder = new MediaRecorder(stream); audioChunks = []; mediaRecorder.ondataavailable = e => audioChunks.push(e.data); mediaRecorder.onstop = () => { bearAudio.src = URL.createObjectURL(new Blob(audioChunks, { type: 'audio/mp3' })); document.getElementById('play-audio-btn').classList.remove('hidden'); }; mediaRecorder.start(); document.getElementById('btn-record').classList.add('hidden'); document.getElementById('btn-stop').classList.remove('hidden'); } catch(err) { alert('Permita o uso do microfone no navegador!'); } }
         function stopRecording() { if(mediaRecorder && mediaRecorder.state !== "inactive") { mediaRecorder.stop(); document.getElementById('btn-record').classList.remove('hidden'); document.getElementById('btn-stop').classList.add('hidden'); } }
         function playBearAudio() { if(bearAudio.src) { if(bearGroup) { bearGroup.position.y = -0.3; setTimeout(() => { bearGroup.position.y = -0.5; }, 200); } bearAudio.play(); } }
     </script>
