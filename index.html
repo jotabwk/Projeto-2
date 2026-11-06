@@ -62,7 +62,6 @@
         .pcp-log-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .dark .pcp-log-scroll::-webkit-scrollbar-thumb { background-color: #475569; }
         
-        /* Estilização para o campo select */
         select option { background: white; color: #374151; }
         .dark select option { background: #1f2937; color: #f3f4f6; }
     </style>
@@ -153,16 +152,13 @@
                         <button id="play-audio-btn" onclick="playBearAudio()" class="hidden w-full mt-4 bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 border border-red-200 dark:border-red-900/50 font-bold py-3 rounded-xl hover:bg-red-100 transition-colors"><i class="fa-solid fa-play mr-2"></i> Testar Reprodução do Chip</button>
                     </div>
 
-                    <!-- NOVO: PASSO 4 (Destinatário e Roteirização) -->
+                    <!-- PASSO 4 ATUALIZADO: Destinatário com Input livre -->
                     <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50">
                         <h3 class="font-fredoka text-xl font-bold text-alergria-orange mb-4">4. Destinatário e Local</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Criança (Paciente)</label>
                                 <input type="text" id="paciente-nome" placeholder="Escreva o nome da criança..." class="w-full p-3 rounded-xl border border-gray-200 focus:border-alergria-orange bg-gray-50 dark:bg-gray-700 outline-none text-gray-700 dark:text-gray-200 font-semibold">
-                            </div>
-                                    <!-- Injetado via JS -->
-                                </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Unidade Hospitalar (RJ)</label>
@@ -312,6 +308,7 @@
                     <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wide">Aguardando Envio</p>
                     <div class="flex items-end justify-between"><h3 class="text-4xl font-black text-gray-800 dark:text-white">32</h3><span class="text-alergria-blue text-sm font-bold"><i class="fa-solid fa-truck"></i> Hoje</span></div>
                 </div>
+                <!-- CARD SLA CLICÁVEL -->
                 <div onclick="showView('view-sla-analysis')" class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-alergria-pink cursor-pointer transform hover:-translate-y-1 hover:shadow-lg transition-all group relative">
                     <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wide group-hover:text-alergria-pink transition-colors">Entregas no Prazo <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs opacity-50"></i></p>
                     <div class="flex items-end justify-between"><h3 class="text-4xl font-black text-gray-800 dark:text-white">99.2%</h3><span class="text-green-500 text-sm font-bold"><i class="fa-solid fa-check-double"></i> SLA</span></div>
@@ -346,11 +343,13 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Gráfico de Rosca -->
                 <div class="bg-white/90 dark:bg-gray-800/90 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 flex flex-col items-center justify-center">
                     <h3 class="font-bold text-xl text-gray-800 dark:text-white mb-6 text-center">Matriz de Gargalos Logísticos</h3>
                     <div class="relative w-full max-w-[350px] aspect-square"><canvas id="slaChart"></canvas></div>
                     <p class="text-xs text-gray-400 mt-6 text-center italic">*Baseado nos registos ERP dos últimos 30 dias de produção.</p>
                 </div>
+                <!-- Explicações Técnicas (RCA) -->
                 <div class="space-y-6">
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-alergria-pink flex items-start space-x-4">
                         <div class="bg-pink-100 dark:bg-pink-900/30 text-alergria-pink p-3 rounded-xl text-2xl"><i class="fa-solid fa-microchip"></i></div>
@@ -375,6 +374,7 @@
     </main>
 
     <!-- MODAIS DO SISTEMA -->
+    <!-- Modal Pedido Sucesso -->
     <div id="modal-pedido-sucesso" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/80 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-sm w-full relative transform scale-95 transition-transform duration-300 border-t-8 border-green-500" id="modal-pedido-content">
             <div class="text-center mb-6"><i class="fa-solid fa-circle-check text-5xl text-green-500 mb-4"></i><h3 class="font-fredoka text-2xl font-bold text-gray-800 dark:text-white">Ordem Gerada!</h3></div>
@@ -385,6 +385,7 @@
         </div>
     </div>
     
+    <!-- Modal Laudo de Assepsia -->
     <div id="modal-laudo" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/80 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-lg w-full relative transform scale-95 transition-transform duration-300 border-t-8 border-teal-500" id="modal-laudo-content">
             <button onclick="closeLaudoModal()" class="absolute top-4 right-5 text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button>
@@ -399,6 +400,7 @@
         </div>
     </div>
 
+    <!-- Modal Fluxograma PCP -->
     <div id="modal-fluxograma" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-md w-full relative transform scale-95 transition-transform duration-300" id="modal-content">
             <button onclick="closeModal()" class="absolute top-4 right-5 text-gray-400 hover:text-red-500 text-2xl transition-colors"><i class="fa-solid fa-xmark"></i></button>
@@ -410,8 +412,9 @@
     </div>
 
     <script>
-        // --- NOME E HOSPITAIS (Injeção via JS) ---
-        // --- HOSPITAIS (Injeção via JS) ---
+        // --- INICIALIZAÇÃO DE VARIÁVEIS E HOSPITAIS ---
+        let currentOrderCode = '';
+        
         const hospitaisRJ = ["INCA - Instituto Nacional de Câncer", "Hospital Municipal Souza Aguiar", "Hospital Municipal Miguel Couto", "Hospital Municipal Salgado Filho", "Hospital Municipal Lourenço Jorge", "Hospital Copa D'Or", "Hospital Barra D'Or", "Hospital Quinta D'Or", "Hospital Norte D'Or", "Hospital Copa Star", "Hospital São Lucas Copacabana", "Hospital Samaritano Botafogo", "Hospital Samaritano Barra", "Hospital Vitória", "Hospital Pasteur", "Hospital Rio Mar", "Casa de Saúde São José", "Complexo Hospitalar de Niterói (CHN)", "Hospital de Clínicas de Jacarepaguá", "Hospital da Lagoa"];
 
         function popularCampos() {
@@ -420,19 +423,8 @@
                 hospitaisRJ.sort().forEach(hosp => selectHosp.add(new Option(hosp, hosp)));
             }
         }
-        const hospitaisRJ = ["INCA - Instituto Nacional de Câncer", "Hospital Municipal Souza Aguiar", "Hospital Municipal Miguel Couto", "Hospital Municipal Salgado Filho", "Hospital Municipal Lourenço Jorge", "Hospital Copa D'Or", "Hospital Barra D'Or", "Hospital Quinta D'Or", "Hospital Norte D'Or", "Hospital Copa Star", "Hospital São Lucas Copacabana", "Hospital Samaritano Botafogo", "Hospital Samaritano Barra", "Hospital Vitória", "Hospital Pasteur", "Hospital Rio Mar", "Casa de Saúde São José", "Complexo Hospitalar de Niterói (CHN)", "Hospital de Clínicas de Jacarepaguá", "Hospital da Lagoa"];
-
-        function popularCampos() {
-            const selectNome = document.getElementById('paciente-nome');
-            const selectHosp = document.getElementById('paciente-hospital');
-            if(selectNome && selectNome.options.length <= 1) {
-                nomesCriancas.sort().forEach(nome => selectNome.add(new Option(nome, nome)));
-                hospitaisRJ.sort().forEach(hosp => selectHosp.add(new Option(hosp, hosp)));
-            }
-        }
 
         // --- NAVEGAÇÃO SPA ---
-        let currentOrderCode = '';
         function showView(viewId) {
             const currentView = document.querySelector('.view-section.active');
             if (currentView && currentView.id === viewId) return;
@@ -450,36 +442,53 @@
                     if(viewId === 'view-sla-analysis') setTimeout(initSLAChart, 300);
                 }
             };
-            if (currentView) { currentView.classList.remove('fade-in'); setTimeout(() => { currentView.classList.remove('active'); activateNew(); }, 400); 
+
+            if (currentView) {
+                currentView.classList.remove('fade-in');
+                setTimeout(() => { currentView.classList.remove('active'); activateNew(); }, 400); 
             } else activateNew();
         }
 
         function toggleTheme() { document.documentElement.classList.toggle('dark'); }
 
-        // --- GRÁFICO: ANÁLISE DE SLA ---
+        // --- GRÁFICO: ANÁLISE DE SLA (Doughnut Chart) ---
         let slaChartInstance = null;
         function initSLAChart() {
             const ctx = document.getElementById('slaChart');
             if(!ctx) return;
             if(slaChartInstance) slaChartInstance.destroy();
+            
             slaChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Falha Chip (Áudio)', 'Fila UV-C', 'Last-Mile', 'Reprovação QC'],
                     datasets: [{
-                        data: [45, 30, 15, 10], backgroundColor: ['#FF5AAE', '#14b8a6', '#FF8200', '#2F9BFF'],
-                        borderWidth: 3, borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff', hoverOffset: 8
+                        data: [45, 30, 15, 10],
+                        backgroundColor: ['#FF5AAE', '#14b8a6', '#FF8200', '#2F9BFF'],
+                        borderWidth: 3,
+                        borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                        hoverOffset: 8
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { font: { family: 'Nunito', weight: 'bold' }, padding: 15 } }, tooltip: { callbacks: { label: function(c) { return ' ' + c.label + ': ' + c.parsed + '%'; } } } } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: 'Nunito', weight: 'bold' }, padding: 15 } },
+                        tooltip: { callbacks: { label: function(c) { return ' ' + c.label + ': ' + c.parsed + '%'; } } }
+                    }
+                }
             });
         }
 
         // --- LÓGICA DE PEDIDOS E RASTREIO ---
         function finalizarPedido() {
-            // O .trim() remove espaços em branco acidentais antes e depois do nome
-            const nome = document.getElementById('paciente-nome').value.trim();
-            const hosp = document.getElementById('paciente-hospital').value;
+            const inputNome = document.getElementById('paciente-nome');
+            const selectHosp = document.getElementById('paciente-hospital');
+            
+            const nome = inputNome ? inputNome.value.trim() : '';
+            const hosp = selectHosp ? selectHosp.value : '';
             
             if(!nome || !hosp) { 
                 alert('Atenção: Escreva o nome da criança e selecione o hospital de destino antes de emitir a OP.'); 
