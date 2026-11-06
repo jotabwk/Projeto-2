@@ -1,24 +1,29 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projeto AlerGria - Sistema PCP</title>
+    
+    <!-- TAILWIND CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FONTES E ÍCONES -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- EMAILJS CONFIGURAÇÃO -->
+    <!-- EMAILJS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
-        (function() {
-            emailjs.init("SUA_PUBLIC_KEY_AQUI"); // MANTENHA A SUA CHAVE AQUI
-        })();
+        (function() { emailjs.init("SUA_PUBLIC_KEY_AQUI"); })();
     </script>
 
-    <!-- THREE.JS E CHART.JS -->
+    <!-- THREE.JS (Urso 3D) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <!-- CHART.JS (Gráficos Dashboard e SLA) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
@@ -27,18 +32,9 @@
             theme: {
                 extend: {
                     colors: {
-                        alergria: {
-                            pink: '#FF5AAE',
-                            blue: '#2F9BFF',
-                            yellow: '#FAEA53',
-                            orange: '#FF8200',
-                            brown: '#8B4513'
-                        }
+                        alergria: { pink: '#FF5AAE', blue: '#2F9BFF', yellow: '#FAEA53', orange: '#FF8200', brown: '#8B4513' }
                     },
-                    fontFamily: {
-                        fredoka: ['Fredoka', 'sans-serif'],
-                        nunito: ['Nunito', 'sans-serif'],
-                    }
+                    fontFamily: { fredoka: ['Fredoka', 'sans-serif'], nunito: ['Nunito', 'sans-serif'] }
                 }
             }
         }
@@ -47,16 +43,21 @@
         .view-section { display: none; opacity: 0; transform: translateY(20px) scale(0.98); transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .view-section.active { display: block; }
         .view-section.fade-in { opacity: 1; transform: translateY(0) scale(1); }
+        
         @keyframes float { 0% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-25px) rotate(8deg); } 100% { transform: translateY(0px) rotate(0deg); } }
         .shape-float { animation: float 7s ease-in-out infinite; }
         .shape-float-delay-1 { animation: float 9s ease-in-out infinite 1.5s; }
+        
         html { scroll-behavior: smooth; }
+
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
         .recording { animation: pulse-red 1.5s infinite; background-color: #ef4444; color: white; border-color: #ef4444; }
+        
         .progress-bar-fill { transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .step-active { @apply bg-alergria-blue text-white border-alergria-blue shadow-lg scale-110 transition-all; }
         .step-completed { @apply bg-green-500 text-white border-green-500 shadow-md transition-all; }
         .step-pending { @apply bg-gray-100 text-gray-400 border-gray-200 dark:bg-gray-700 dark:text-gray-500 dark:border-gray-600 transition-all; }
+        
         .pcp-log-scroll::-webkit-scrollbar { width: 6px; }
         .pcp-log-scroll::-webkit-scrollbar-track { background: transparent; }
         .pcp-log-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
@@ -65,33 +66,22 @@
 </head>
 <body class="font-nunito text-gray-800 dark:text-gray-100 transition-colors duration-500 relative overflow-x-hidden min-h-screen bg-fixed bg-gradient-to-br from-alergria-blue/15 via-alergria-pink/10 to-alergria-yellow/15 dark:from-alergria-blue/20 dark:via-gray-900 dark:to-alergria-orange/10">
 
-    <!-- Fundo -->
+    <!-- Elementos de Fundo -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <svg class="absolute top-0 right-0 w-64 md:w-[450px] h-64 md:h-[450px] opacity-80 dark:opacity-40 z-0 drop-shadow-xl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#FAEA53" d="M 10,0 C 80,90 180,60 200,190 L 200,0 Z" />
-            <path fill="#2F9BFF" d="M 50,0 C 100,70 180,45 200,140 L 200,0 Z" />
-            <path fill="#FF5AAE" d="M 110,0 C 150,45 190,25 200,80 L 200,0 Z" />
-        </svg>
-        <svg class="absolute bottom-0 left-0 w-64 md:w-[450px] h-64 md:h-[450px] opacity-80 dark:opacity-40 z-0 drop-shadow-xl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#FAEA53" d="M 0,10 C 90,80 60,180 190,200 L 0,200 Z" />
-            <path fill="#2F9BFF" d="M 0,50 C 70,100 45,180 140,200 L 0,200 Z" />
-            <path fill="#FF5AAE" d="M 0,110 C 45,150 25,190 80,200 L 0,200 Z" />
-        </svg>
+        <svg class="absolute top-0 right-0 w-64 md:w-[450px] h-64 md:h-[450px] opacity-80 dark:opacity-40 z-0 drop-shadow-xl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#FAEA53" d="M 10,0 C 80,90 180,60 200,190 L 200,0 Z" /><path fill="#2F9BFF" d="M 50,0 C 100,70 180,45 200,140 L 200,0 Z" /><path fill="#FF5AAE" d="M 110,0 C 150,45 190,25 200,80 L 200,0 Z" /></svg>
+        <svg class="absolute bottom-0 left-0 w-64 md:w-[450px] h-64 md:h-[450px] opacity-80 dark:opacity-40 z-0 drop-shadow-xl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#FAEA53" d="M 0,10 C 90,80 60,180 190,200 L 0,200 Z" /><path fill="#2F9BFF" d="M 0,50 C 70,100 45,180 140,200 L 0,200 Z" /><path fill="#FF5AAE" d="M 0,110 C 45,150 25,190 80,200 L 0,200 Z" /></svg>
         <div class="absolute top-10 left-10 w-32 h-32 bg-alergria-pink rounded-full opacity-40 dark:opacity-20 shape-float shadow-xl backdrop-blur-3xl"></div>
         <div class="absolute bottom-40 right-20 w-48 h-48 bg-alergria-yellow rounded-full opacity-40 dark:opacity-20 shape-float-delay-1 shadow-xl"></div>
     </div>
 
-    <!-- Navegação -->
+    <!-- Navegação Superior -->
     <nav class="bg-gradient-to-r from-alergria-pink/10 via-white/60 to-alergria-blue/10 dark:from-alergria-pink/20 dark:via-gray-900/80 dark:to-alergria-blue/20 backdrop-blur-xl shadow-md p-4 sticky top-0 z-50 transition-colors duration-500 border-b border-white/40 dark:border-gray-700/50 border-t-4 border-t-alergria-pink">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-2 cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95" onclick="showView('view-home')">
                 <img src="image_3b11e2.jpg" alt="Logótipo AlerGria" class="h-16 w-auto object-contain rounded-xl shadow-sm">
             </div>
             <div class="flex items-center space-x-4">
-                <button onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300 hover:rotate-12 active:scale-90 shadow-sm">
-                    <i class="fa-solid fa-moon dark:hidden text-alergria-blue"></i>
-                    <i class="fa-solid fa-sun hidden dark:block text-alergria-yellow"></i>
-                </button>
+                <button onclick="toggleTheme()" class="text-xl p-2 rounded-full hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300 hover:rotate-12 active:scale-90 shadow-sm"><i class="fa-solid fa-moon dark:hidden text-alergria-blue"></i><i class="fa-solid fa-sun hidden dark:block text-alergria-yellow"></i></button>
                 <button onclick="showView('view-login')" class="font-fredoka font-bold text-alergria-blue dark:text-white hover:text-white hover:bg-alergria-blue transition-all duration-300 bg-white/80 dark:bg-gray-700/80 px-5 py-2 rounded-full active:scale-95 shadow-sm border border-alergria-blue/20">Acesso ERP</button>
             </div>
         </div>
@@ -99,7 +89,7 @@
 
     <main class="max-w-7xl mx-auto p-4 min-h-[80vh] relative z-10">
         
-        <!-- Home View -->
+        <!-- DASHBOARD INICIAL -->
         <section id="view-home" class="view-section active fade-in text-center py-12">
             <h1 class="font-fredoka text-4xl md:text-5xl font-bold text-alergria-pink mb-4 drop-shadow-sm">A Engenharia por trás de cada Sorriso.</h1>
             <p class="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-12 max-w-2xl mx-auto font-medium">Uma plataforma logística de apoio emocional feita para transformar a distância em carinho, garantindo 100% de segurança clínica e rastreabilidade (PCP).</p>
@@ -118,81 +108,107 @@
             </div>
         </section>
 
-        <!-- PACIENTE / FÁBRICA (Urso 3D + Finalização) -->
+        <!-- FÁBRICA / CRIAÇÃO DE URSO 3D -->
         <section id="view-paciente" class="view-section py-8">
-            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-orange font-bold bg-white/70 px-5 py-2 rounded-full shadow-sm" onclick="showView('view-home')"><i class="fa-solid fa-arrow-left mr-2"></i> Voltar ao Dashboard</div>
+            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-orange font-bold bg-white/70 dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm" onclick="showView('view-home')"><i class="fa-solid fa-arrow-left mr-2"></i> Voltar ao Dashboard</div>
             <div class="text-center mb-10"><h2 class="font-fredoka text-4xl font-bold text-alergria-orange mb-3">Linha de Montagem de Ursos</h2><p class="text-gray-600 dark:text-gray-300">Construa o seu companheiro em 3D, grave um áudio e gere a sua Ordem de Produção!</p></div>
+            
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Modelo 3D -->
                 <div class="bg-white/80 dark:bg-gray-800/80 p-4 rounded-3xl shadow-xl h-[650px] flex flex-col border border-white/40 dark:border-gray-700/50">
                     <div class="flex justify-between items-center px-4 py-2 mb-2"><span class="font-bold text-gray-500 text-sm"><i class="fa-solid fa-rotate mr-2"></i>Girar</span><span class="font-bold text-gray-500 text-sm"><i class="fa-solid fa-magnifying-glass mr-2"></i>Zoom</span></div>
                     <div id="bear-3d-container" class="w-full flex-1 bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-900 rounded-2xl cursor-move shadow-inner"></div>
                 </div>
+
                 <div class="space-y-5">
-                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-alergria-blue mb-4">1. Especificação de Cor</h3><div class="flex flex-wrap gap-4"><button onclick="changeBearColor(0x8B4513)" class="w-12 h-12 rounded-full bg-[#8B4513] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0xFFB6C1)" class="w-12 h-12 rounded-full bg-[#FFB6C1] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0x87CEEB)" class="w-12 h-12 rounded-full bg-[#87CEEB] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0xFFE4B5)" class="w-12 h-12 rounded-full bg-[#FFE4B5] border-4 border-white shadow-md hover:scale-110 transition-transform"></button></div></div>
-                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-alergria-pink mb-4">2. Padrão de Estampa</h3><div class="grid grid-cols-3 gap-4"><button onclick="changeBearPattern('nenhuma')" class="py-3 px-4 bg-gray-100 dark:bg-gray-700 rounded-xl font-bold text-gray-600">Lisa</button><button onclick="changeBearPattern('bolinhas')" class="py-3 px-4 bg-pink-50 dark:bg-pink-900/30 rounded-xl font-bold text-alergria-pink">Bolinhas</button><button onclick="changeBearPattern('listras')" class="py-3 px-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl font-bold text-alergria-blue">Listras</button></div></div>
-                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-red-500 mb-4">3. Upload de Hardware (Áudio)</h3><div class="flex space-x-4"><button id="btn-record" onclick="startRecording()" class="flex-1 bg-red-100 text-red-600 font-bold py-3 px-6 rounded-xl"><i class="fa-solid fa-microphone mr-2"></i> Gravar</button><button id="btn-stop" onclick="stopRecording()" class="flex-1 hidden recording font-bold py-3 px-6 rounded-xl text-white"><i class="fa-solid fa-stop mr-2"></i> Parar</button></div><button id="play-audio-btn" onclick="playBearAudio()" class="hidden w-full mt-4 bg-red-50 text-red-500 border font-bold py-3 rounded-xl"><i class="fa-solid fa-play mr-2"></i> Testar</button></div>
-                    <div class="bg-gradient-to-r from-green-50 to-emerald-100 dark:from-green-900/30 p-6 rounded-3xl shadow-lg border border-green-200"><h3 class="font-fredoka text-xl font-bold text-green-700 mb-2">4. Emissão de Ordem (OP)</h3><button onclick="finalizarPedido()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-md transition-colors mt-2"><i class="fa-solid fa-check-double mr-2"></i> Finalizar Pedido</button></div>
+                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-alergria-blue mb-4">1. Especificação de Cor</h3><div class="flex flex-wrap gap-4"><button onclick="changeBearColor(0x8B4513)" class="w-12 h-12 rounded-full bg-[#8B4513] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0xFFB6C1)" class="w-12 h-12 rounded-full bg-[#FFB6C1] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0x87CEEB)" class="w-12 h-12 rounded-full bg-[#87CEEB] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0xFFE4B5)" class="w-12 h-12 rounded-full bg-[#FFE4B5] border-4 border-white shadow-md hover:scale-110 transition-transform"></button><button onclick="changeBearColor(0xE6E6FA)" class="w-12 h-12 rounded-full bg-[#E6E6FA] border-4 border-white shadow-md hover:scale-110 transition-transform"></button></div></div>
+                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-alergria-pink mb-4">2. Padrão de Estampa</h3><div class="grid grid-cols-3 gap-4"><button onclick="changeBearPattern('nenhuma')" class="py-3 px-4 bg-gray-100 dark:bg-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300">Lisa</button><button onclick="changeBearPattern('bolinhas')" class="py-3 px-4 bg-pink-50 dark:bg-pink-900/30 rounded-xl font-bold text-alergria-pink">Bolinhas</button><button onclick="changeBearPattern('listras')" class="py-3 px-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl font-bold text-alergria-blue">Listras</button></div></div>
+                    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-3xl shadow-lg border border-white/40 dark:border-gray-700/50"><h3 class="font-fredoka text-xl font-bold text-red-500 mb-4">3. Upload de Hardware (Áudio)</h3><div class="flex space-x-4"><button id="btn-record" onclick="startRecording()" class="flex-1 bg-red-100 text-red-600 font-bold py-3 px-6 rounded-xl hover:bg-red-200 transition-colors"><i class="fa-solid fa-microphone mr-2"></i> Iniciar Gravação</button><button id="btn-stop" onclick="stopRecording()" class="flex-1 hidden recording font-bold py-3 px-6 rounded-xl text-white"><i class="fa-solid fa-stop mr-2"></i> Parar</button></div><button id="play-audio-btn" onclick="playBearAudio()" class="hidden w-full mt-4 bg-red-50 text-red-500 border border-red-200 font-bold py-3 rounded-xl hover:bg-red-100 transition-colors"><i class="fa-solid fa-play mr-2"></i> Testar Reprodução do Chip</button></div>
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 p-6 rounded-3xl shadow-lg border border-green-200 dark:border-green-800"><h3 class="font-fredoka text-xl font-bold text-green-700 dark:text-green-400 mb-4">4. Emissão de Ordem (OP)</h3><p class="text-sm text-green-800 dark:text-green-300 mb-4">Ao finalizar, o sistema ERP irá gerar um código de rastreio para acompanhar a esterilização e envio do urso.</p><button onclick="finalizarPedido()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-md transition-colors text-lg active:scale-95"><i class="fa-solid fa-check-double mr-2"></i> Finalizar Pedido</button></div>
                 </div>
             </div>
         </section>
 
-        <!-- MONITORAMENTO PCP E RASTREIO -->
+        <!-- RASTREIO E MONITORAMENTO CLIENTE -->
         <section id="view-monitoramento" class="view-section py-8">
-            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-blue font-bold bg-white/70 px-5 py-2 rounded-full shadow-sm" onclick="showView('view-home')"><i class="fa-solid fa-arrow-left mr-2"></i> Voltar ao Dashboard</div>
-            <div class="text-center mb-12"><h2 class="font-fredoka text-4xl font-bold text-alergria-blue mb-3">Central de Monitoramento (PCP)</h2><p class="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Controle absoluto de processos. Acompanhe a manufatura, laudos de assepsia UV-C e logística em tempo real.</p></div>
+            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-blue hover:text-blue-700 dark:text-blue-400 transition-all duration-300 hover:-translate-x-2 font-bold bg-white/70 backdrop-blur-sm dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm border border-white/40" onclick="showView('view-home')">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Voltar ao Dashboard
+            </div>
+            
+            <div class="text-center mb-12">
+                <h2 class="font-fredoka text-4xl font-bold text-alergria-blue mb-3">Central de Monitoramento (PCP)</h2>
+                <p class="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Controle absoluto de processos. Acompanhe a manufatura, laudos de assepsia UV-C e logística em tempo real.</p>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                <div class="lg:col-span-2 bg-white/90 p-8 rounded-3xl shadow-xl border border-white/40 flex flex-col dark:bg-gray-800/90 dark:border-gray-700">
+                <!-- ÁREA DE RASTREIO -->
+                <div class="lg:col-span-2 bg-white/90 backdrop-blur-md dark:bg-gray-800/90 p-8 rounded-3xl shadow-xl border border-white/40 dark:border-gray-700/50 flex flex-col">
                     <h3 class="font-fredoka text-2xl font-bold text-alergria-pink mb-2"><i class="fa-solid fa-satellite-dish mr-2"></i> Localizador de Ordens</h3>
-                    <div class="flex space-x-3 mb-8 mt-4"><input type="text" id="track-code" placeholder="CÓDIGO DO PEDIDO" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-pink uppercase font-bold text-center text-lg dark:bg-gray-700 dark:border-gray-600"><button onclick="simulateFullTracking()" class="bg-alergria-pink text-white px-8 rounded-2xl font-bold hover:bg-pink-600 shadow-md text-lg"><i class="fa-solid fa-search"></i> Buscar</button></div>
+                    <p class="text-sm text-gray-500 mb-6">Insira a Ordem de Produção (Ex: URSO-7742) gerada no momento do pedido.</p>
+                    
+                    <div class="flex space-x-3 mb-8">
+                        <input type="text" id="track-code" placeholder="CÓDIGO DO PEDIDO" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-pink outline-none uppercase font-bold text-center dark:bg-gray-700 dark:border-gray-600 text-lg">
+                        <button onclick="simulateFullTracking()" class="bg-alergria-pink text-white px-8 rounded-2xl font-bold hover:bg-pink-600 transition-colors shadow-md text-lg"><i class="fa-solid fa-search"></i> Buscar</button>
+                    </div>
+
+                    <!-- RESULTADO DO RASTREIO AVANÇADO -->
                     <div id="tracking-result-panel" class="hidden animate-[fadeIn_0.5s_ease-out] flex-1 flex flex-col">
                         <div class="flex justify-between items-center mb-8 border-b border-gray-200 dark:border-gray-700 pb-4">
-                            <div><p class="text-xs text-gray-500 uppercase font-bold">Ordem</p><h4 class="text-xl font-black text-alergria-blue" id="lbl-codigo">URSO-XXXX</h4></div>
-                            <div class="text-right"><p class="text-xs text-gray-500 uppercase font-bold">Lead Time</p><h4 class="text-lg font-bold text-green-600"><i class="fa-solid fa-clock mr-1"></i> No Prazo</h4></div>
+                            <div><p class="text-xs text-gray-500 uppercase tracking-wide font-bold">Ordem de Produção</p><h4 class="text-xl font-black text-alergria-blue" id="lbl-codigo">URSO-XXXX</h4></div>
+                            <div class="text-right"><p class="text-xs text-gray-500 uppercase tracking-wide font-bold">Status do Lead Time</p><h4 class="text-lg font-bold text-green-600"><i class="fa-solid fa-clock mr-1"></i> Dentro do Prazo</h4></div>
                         </div>
+
+                        <!-- Stepper de Status Visual -->
                         <div class="relative max-w-full mx-auto px-4 mb-8 w-full">
                             <div class="absolute top-1/2 left-8 right-8 h-1 bg-gray-200 dark:bg-gray-700 -z-10 transform -translate-y-1/2 rounded-full"></div>
                             <div id="track-progress-line" class="absolute top-1/2 left-8 h-1 bg-alergria-blue -z-10 transform -translate-y-1/2 rounded-full transition-all duration-1000 w-0"></div>
+                            
                             <div class="flex justify-between items-center relative z-10">
-                                <div class="flex flex-col items-center"><div id="step-1" class="w-12 h-12 rounded-full flex items-center justify-center font-bold step-completed border-4"><i class="fa-solid fa-hammer"></i></div><span class="text-xs font-bold mt-2 text-gray-700 dark:text-gray-300">Produção</span></div>
-                                <div class="flex flex-col items-center"><div id="step-2" class="w-12 h-12 rounded-full flex items-center justify-center font-bold step-active border-4"><i class="fa-solid fa-viruses"></i></div><span class="text-xs font-bold mt-2 text-alergria-blue">Esterilização</span></div>
-                                <div class="flex flex-col items-center"><div id="step-3" class="w-12 h-12 rounded-full flex items-center justify-center font-bold step-pending border-4"><i class="fa-solid fa-truck-fast"></i></div><span class="text-xs font-bold mt-2 text-gray-400">Em Viagem</span></div>
-                                <div class="flex flex-col items-center"><div id="step-4" class="w-12 h-12 rounded-full flex items-center justify-center font-bold step-pending border-4"><i class="fa-solid fa-house-chimney-medical"></i></div><span class="text-xs font-bold mt-2 text-gray-400">Concluído</span></div>
+                                <div class="flex flex-col items-center"><div id="step-1" class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg step-completed border-4"><i class="fa-solid fa-hammer"></i></div><span class="text-xs font-bold mt-2 text-gray-700 dark:text-gray-300 text-center">Em Produção</span></div>
+                                <div class="flex flex-col items-center"><div id="step-2" class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg step-active border-4"><i class="fa-solid fa-viruses"></i></div><span class="text-xs font-bold mt-2 text-alergria-blue text-center">Esterilização</span></div>
+                                <div class="flex flex-col items-center"><div id="step-3" class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg step-pending border-4"><i class="fa-solid fa-truck-fast"></i></div><span class="text-xs font-bold mt-2 text-gray-400 text-center">Em Viagem</span></div>
+                                <div class="flex flex-col items-center"><div id="step-4" class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg step-pending border-4"><i class="fa-solid fa-house-chimney-medical"></i></div><span class="text-xs font-bold mt-2 text-gray-400 text-center">Concluído</span></div>
                             </div>
                         </div>
+
+                        <!-- Logs PCP -->
                         <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-5 flex-1 mb-6 border border-gray-200 dark:border-gray-700">
-                            <h5 class="font-bold text-gray-700 dark:text-gray-200 mb-3 text-sm uppercase"><i class="fa-solid fa-list-check mr-2"></i> Histórico de Operações</h5>
-                            <div class="max-h-40 overflow-y-auto pcp-log-scroll pr-2"><ul class="space-y-4 border-l-2 border-gray-200 ml-3" id="tracking-history-list"></ul></div>
+                            <h5 class="font-bold text-gray-700 dark:text-gray-200 mb-3 text-sm uppercase tracking-wider"><i class="fa-solid fa-list-check mr-2"></i> Histórico de Operações do Sistema</h5>
+                            <div class="max-h-40 overflow-y-auto pcp-log-scroll pr-2"><ul class="space-y-4 relative border-l-2 border-gray-200 dark:border-gray-700 ml-3" id="tracking-history-list"></ul></div>
                         </div>
-                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 flex justify-between border border-blue-100 items-center">
-                            <div><h5 class="font-bold text-alergria-blue text-sm"><i class="fa-solid fa-shield-virus mr-1"></i> Certificação de Assepsia</h5></div>
-                            <button onclick="openLaudoModal()" class="bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold px-4 py-2.5 rounded-lg"><i class="fa-solid fa-file-contract mr-1"></i> Emitir Laudo</button>
+
+                        <!-- Botão de Laudo -->
+                        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between border border-blue-100 dark:border-blue-900 mt-auto">
+                            <div class="mb-3 sm:mb-0 text-center sm:text-left"><h5 class="font-bold text-alergria-blue text-sm"><i class="fa-solid fa-shield-virus mr-1"></i> Certificação de Assepsia</h5><p class="text-[11px] text-gray-600 dark:text-gray-400">Laudo técnico de UV-C gerado pelo sistema de qualidade.</p></div>
+                            <button onclick="openLaudoModal()" class="bg-teal-500 hover:bg-teal-600 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors shadow-sm whitespace-nowrap"><i class="fa-solid fa-file-contract mr-1"></i> Emitir Laudo</button>
                         </div>
                     </div>
                 </div>
-                <!-- KPIs Fixos -->
+
+                <!-- Painel de Qualidade (KPIs Fixos) -->
                 <div class="bg-gray-900 dark:bg-gray-950 p-8 rounded-3xl shadow-xl flex flex-col justify-center border border-gray-800">
                     <h3 class="font-fredoka text-xl font-bold text-white mb-6 text-center">Garantia Operacional</h3>
                     <div class="space-y-4">
-                        <div class="bg-gray-800 p-4 rounded-2xl flex items-center"><div class="w-12 h-12 bg-teal-500/20 text-teal-400 rounded-full flex items-center justify-center text-xl mr-4"><i class="fa-solid fa-viruses"></i></div><div><div class="text-2xl font-black text-white">99.9%</div><div class="text-[10px] text-gray-400 font-bold uppercase">Taxa de Assepsia</div></div></div>
-                        <div class="bg-gray-800 p-4 rounded-2xl flex items-center"><div class="w-12 h-12 bg-blue-500/20 text-alergria-blue rounded-full flex items-center justify-center text-xl mr-4"><i class="fa-solid fa-stopwatch"></i></div><div><div class="text-2xl font-black text-white">&lt; 48h</div><div class="text-[10px] text-gray-400 font-bold uppercase">Lead Time Máximo</div></div></div>
-                        <div class="bg-gray-800 p-4 rounded-2xl flex items-center"><div class="w-12 h-12 bg-yellow-500/20 text-alergria-yellow rounded-full flex items-center justify-center text-xl mr-4"><i class="fa-solid fa-box-check"></i></div><div><div class="text-xl font-black text-white">Grau 1</div><div class="text-[10px] text-gray-400 font-bold uppercase">Plástico Cirúrgico</div></div></div>
+                        <div class="bg-gray-800 p-4 rounded-2xl flex items-center border border-gray-700"><div class="w-12 h-12 bg-teal-500/20 text-teal-400 rounded-full flex items-center justify-center text-xl mr-4"><i class="fa-solid fa-viruses"></i></div><div><div class="text-2xl font-black text-white">99.9%</div><div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Taxa de Assepsia</div></div></div>
+                        <div class="bg-gray-800 p-4 rounded-2xl flex items-center border border-gray-700"><div class="w-12 h-12 bg-blue-500/20 text-alergria-blue rounded-full flex items-center justify-center text-xl mr-4"><i class="fa-solid fa-stopwatch"></i></div><div><div class="text-2xl font-black text-white">&lt; 48h</div><div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Lead Time Máximo</div></div></div>
+                        <div class="bg-gray-800 p-4 rounded-2xl flex items-center border border-gray-700"><div class="w-12 h-12 bg-yellow-500/20 text-alergria-yellow rounded-full flex items-center justify-center text-xl mr-4"><i class="fa-solid fa-box-check"></i></div><div><div class="text-xl font-black text-white">Grau 1</div><div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Plástico Cirúrgico</div></div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- FLUXOGRAMA DE SERVIÇO PCP -->
+            <!-- FLUXOGRAMA DE SERVIÇO PCP (COM INTERAÇÃO CLICK) -->
             <div class="bg-white/90 dark:bg-gray-800/90 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
                 <h3 class="font-bold text-xl text-gray-800 dark:text-white mb-2 text-center"><i class="fa-solid fa-diagram-project text-alergria-orange mr-2"></i> Arquitetura de Processos (PCP)</h3>
                 <p class="text-center text-sm text-gray-500 mb-8">Clique nas macros etapas para analisar o fluxo logístico e de saúde.</p>
                 <div class="relative">
-                    <div class="hidden lg:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-gray-200 via-alergria-blue to-green-400 -z-10 transform -translate-y-1/2"></div>
+                    <div class="hidden lg:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-gray-200 via-alergria-blue to-green-400 dark:from-gray-700 dark:via-alergria-blue dark:to-green-600 -z-10 transform -translate-y-1/2"></div>
                     <div class="grid grid-cols-2 lg:grid-cols-6 gap-6">
-                        <div onclick="openModal(1)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-alergria-pink text-alergria-pink rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 transition-all mb-3 z-10"><i class="fa-solid fa-desktop"></i></div><h4 class="font-bold text-sm">1. Demanda</h4></div>
-                        <div onclick="openModal(2)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-alergria-orange text-alergria-orange rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 transition-all mb-3 z-10"><i class="fa-solid fa-microchip"></i></div><h4 class="font-bold text-sm">2. Produção</h4></div>
-                        <div onclick="openModal(3)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-alergria-yellow text-alergria-yellow rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 transition-all mb-3 z-10"><i class="fa-solid fa-microscope"></i></div><h4 class="font-bold text-sm">3. Qualidade</h4></div>
-                        <div onclick="openModal(4)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-teal-400 text-teal-500 rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 transition-all mb-3 z-10"><i class="fa-solid fa-viruses"></i></div><h4 class="font-bold text-sm">4. Assepsia</h4></div>
-                        <div onclick="openModal(5)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-alergria-blue text-alergria-blue rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 transition-all mb-3 z-10"><i class="fa-solid fa-box-archive"></i></div><h4 class="font-bold text-sm">5. Embalagem</h4></div>
-                        <div onclick="openModal(6)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-green-500 text-green-500 rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 transition-all mb-3 z-10"><i class="fa-solid fa-truck-fast"></i></div><h4 class="font-bold text-sm">6. Logística</h4></div>
+                        <div onclick="openModal(1)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-alergria-pink text-alergria-pink rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 hover:bg-pink-50 transition-all mb-3 z-10"><i class="fa-solid fa-desktop"></i></div><h4 class="font-bold text-sm text-gray-800 dark:text-white group-hover:text-alergria-pink transition-colors">1. Demanda</h4></div>
+                        <div onclick="openModal(2)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-alergria-orange text-alergria-orange rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 hover:bg-orange-50 transition-all mb-3 z-10"><i class="fa-solid fa-microchip"></i></div><h4 class="font-bold text-sm text-gray-800 dark:text-white group-hover:text-alergria-orange transition-colors">2. Produção</h4></div>
+                        <div onclick="openModal(3)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-alergria-yellow text-alergria-yellow rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 hover:bg-yellow-50 transition-all mb-3 z-10"><i class="fa-solid fa-microscope"></i></div><h4 class="font-bold text-sm text-gray-800 dark:text-white group-hover:text-alergria-yellow transition-colors">3. Qualidade</h4></div>
+                        <div onclick="openModal(4)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-teal-400 text-teal-500 rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 hover:bg-teal-50 transition-all mb-3 z-10"><i class="fa-solid fa-viruses"></i></div><h4 class="font-bold text-sm text-gray-800 dark:text-white group-hover:text-teal-500 transition-colors">4. Assepsia</h4></div>
+                        <div onclick="openModal(5)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-alergria-blue text-alergria-blue rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 hover:bg-blue-50 transition-all mb-3 z-10"><i class="fa-solid fa-box-archive"></i></div><h4 class="font-bold text-sm text-gray-800 dark:text-white group-hover:text-alergria-blue transition-colors">5. Embalagem</h4></div>
+                        <div onclick="openModal(6)" class="flex flex-col items-center text-center group cursor-pointer"><div class="w-16 h-16 bg-white dark:bg-gray-900 border-4 border-green-500 text-green-500 rounded-full flex items-center justify-center text-xl font-bold shadow-md transform group-hover:scale-110 hover:bg-green-50 transition-all mb-3 z-10"><i class="fa-solid fa-truck-fast"></i></div><h4 class="font-bold text-sm text-gray-800 dark:text-white group-hover:text-green-500 transition-colors">6. Logística</h4></div>
                     </div>
                 </div>
             </div>
@@ -206,22 +222,24 @@
                     <button onclick="toggleLogin('cliente-login')" id="tab-cliente-login" class="w-1/2 py-2.5 rounded-full font-bold bg-white dark:bg-gray-800 shadow-sm text-alergria-blue transition-all text-sm">Cliente (Familiar)</button>
                     <button onclick="toggleLogin('admin-login')" id="tab-admin-login" class="w-1/2 py-2.5 rounded-full font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-all text-sm">Admin (PCP)</button>
                 </div>
+                <!-- Login Cliente -->
                 <div id="form-cliente-login" class="space-y-5 animate-[fadeIn_0.3s_ease-out]">
                     <h3 class="font-bold text-gray-700 dark:text-gray-200 mb-2">Simulação de Conta Cliente</h3>
                     <input type="email" id="login-email" placeholder="O seu e-mail" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-alergria-blue bg-white dark:bg-gray-700 outline-none text-center">
                     <button onclick="loginUser(event)" class="w-full bg-gradient-to-r from-alergria-blue to-blue-500 text-white font-bold py-4 rounded-2xl hover:shadow-lg active:scale-95 transition-all">Aceder à Minha Conta</button>
                 </div>
+                <!-- Login Admin -->
                 <div id="form-admin-login" class="hidden space-y-5 animate-[fadeIn_0.3s_ease-out]">
                     <h3 class="font-bold text-gray-700 dark:text-gray-200 mb-2">Dashboard de Logística Diretoria</h3>
                     <input type="text" id="admin-user" placeholder="ID de Gestor" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-gray-800 bg-white dark:bg-gray-700 outline-none text-center">
                     <input type="password" id="admin-pass" placeholder="Palavra-passe Segura" class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-gray-800 bg-white dark:bg-gray-700 outline-none text-center">
                     <button onclick="loginAdmin(event)" class="w-full bg-gray-800 text-white font-bold py-4 rounded-2xl hover:shadow-lg active:scale-95 transition-all">Entrar no Sistema ERP</button>
                 </div>
-                <button onclick="showView('view-home')" class="mt-6 font-bold text-gray-500 hover:text-gray-700 transition-colors text-sm">Voltar para a Home</button>
+                <button onclick="showView('view-home')" class="mt-6 font-bold text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors text-sm">Voltar para a Home</button>
             </div>
         </section>
 
-        <!-- DASHBOARD DONOS DO SITE (Admin) -->
+        <!-- DASHBOARD DONOS DO SITE (Admin Principal) -->
         <section id="view-admin" class="view-section py-8">
             <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div><h2 class="font-fredoka text-3xl font-bold text-gray-800 dark:text-white">Dashboard Diretoria <span class="text-alergria-blue text-lg">v2.0</span></h2><p class="text-gray-500 dark:text-gray-400">Controlo de Logística e Pedidos.</p></div>
@@ -229,17 +247,22 @@
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-green-500"><p class="text-gray-500 font-bold text-sm mb-1 uppercase">Ursos Entregues</p><div class="flex items-end justify-between"><h3 class="text-4xl font-black">225</h3><span class="text-green-500 text-sm font-bold"><i class="fa-solid fa-arrow-trend-up"></i> +12%</span></div></div>
-                <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-alergria-yellow"><p class="text-gray-500 font-bold text-sm mb-1 uppercase">Em Produção (Fila)</p><div class="flex items-end justify-between"><h3 class="text-4xl font-black">15</h3><span class="text-gray-400 text-sm"><i class="fa-solid fa-gears"></i> Ativo</span></div></div>
-                <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-alergria-blue"><p class="text-gray-500 font-bold text-sm mb-1 uppercase">Aguardando Envio</p><div class="flex items-end justify-between"><h3 class="text-4xl font-black">7</h3><span class="text-alergria-blue text-sm font-bold"><i class="fa-solid fa-truck"></i> Hoje</span></div></div>
-                
-                <!-- CARD ATUALIZADO E CLICÁVEL (ENTREGAS NO PRAZO / SLA) -->
+                <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-green-500">
+                    <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wide">Ursos Entregues</p>
+                    <div class="flex items-end justify-between"><h3 class="text-4xl font-black text-gray-800 dark:text-white">1.248</h3><span class="text-green-500 text-sm font-bold"><i class="fa-solid fa-arrow-trend-up"></i> +12%</span></div>
+                </div>
+                <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-alergria-yellow">
+                    <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wide">Em Produção (Fila)</p>
+                    <div class="flex items-end justify-between"><h3 class="text-4xl font-black text-gray-800 dark:text-white">84</h3><span class="text-gray-400 text-sm"><i class="fa-solid fa-gears"></i> Ativo</span></div>
+                </div>
+                <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-alergria-blue">
+                    <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wide">Aguardando Envio</p>
+                    <div class="flex items-end justify-between"><h3 class="text-4xl font-black text-gray-800 dark:text-white">32</h3><span class="text-alergria-blue text-sm font-bold"><i class="fa-solid fa-truck"></i> Hoje</span></div>
+                </div>
+                <!-- CARD SLA CLICÁVEL -->
                 <div onclick="showView('view-sla-analysis')" class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-md border-l-4 border-alergria-pink cursor-pointer transform hover:-translate-y-1 hover:shadow-lg transition-all group relative">
                     <p class="text-gray-500 font-bold text-sm mb-1 uppercase tracking-wide group-hover:text-alergria-pink transition-colors">Entregas no Prazo <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs opacity-50"></i></p>
-                    <div class="flex items-end justify-between">
-                        <h3 class="text-4xl font-black text-gray-800 dark:text-white">99.2%</h3>
-                        <span class="text-green-500 text-sm font-bold"><i class="fa-solid fa-check-double"></i> SLA</span>
-                    </div>
+                    <div class="flex items-end justify-between"><h3 class="text-4xl font-black text-gray-800 dark:text-white">99.2%</h3><span class="text-green-500 text-sm font-bold"><i class="fa-solid fa-check-double"></i> SLA</span></div>
                     <div class="absolute inset-0 bg-alergria-pink/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                 </div>
             </div>
@@ -249,7 +272,6 @@
                     <h3 class="font-bold text-xl text-gray-800 dark:text-white mb-4">Volume de Logística (Últimos 6 Meses)</h3>
                     <div class="relative h-72 w-full"><canvas id="pcpChart"></canvas></div>
                 </div>
-
                 <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col">
                     <h3 class="font-bold text-xl text-gray-800 dark:text-white mb-4">Fila de Novos Pedidos</h3>
                     <div class="flex-1 overflow-y-auto pr-2 space-y-4">
@@ -260,9 +282,9 @@
             </div>
         </section>
 
-        <!-- NOVO: ANÁLISE DE SLA E GARGALOS LOGÍSTICOS (Aba Explicativa) -->
+        <!-- NOVO: ANÁLISE DE SLA E GARGALOS LOGÍSTICOS (Aba Explicativa RCA) -->
         <section id="view-sla-analysis" class="view-section py-8">
-            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-blue font-bold bg-white/70 px-5 py-2 rounded-full shadow-sm hover:text-blue-700 transition-colors border border-white/40" onclick="showView('view-admin')">
+            <div class="inline-flex items-center mb-8 cursor-pointer text-alergria-blue font-bold bg-white/70 dark:bg-gray-800/70 px-5 py-2 rounded-full shadow-sm hover:text-blue-700 transition-colors border border-white/40 dark:border-gray-700/50" onclick="showView('view-admin')">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Voltar ao Dashboard PCP
             </div>
             
@@ -272,46 +294,43 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <!-- Gráfico de Rosca (Causas de Atraso) -->
+                <!-- Gráfico de Rosca -->
                 <div class="bg-white/90 dark:bg-gray-800/90 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 flex flex-col items-center justify-center">
                     <h3 class="font-bold text-xl text-gray-800 dark:text-white mb-6 text-center">Matriz de Gargalos Logísticos</h3>
-                    <div class="relative w-full max-w-[400px] aspect-square">
+                    <div class="relative w-full max-w-[350px] aspect-square">
                         <canvas id="slaChart"></canvas>
                     </div>
                     <p class="text-xs text-gray-400 mt-6 text-center italic">*Baseado nos registos ERP dos últimos 30 dias de produção.</p>
                 </div>
 
-                <!-- Explicações Técnicas Profissionais -->
+                <!-- Explicações Técnicas (RCA) -->
                 <div class="space-y-6">
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-alergria-pink flex items-start space-x-4">
-                        <div class="bg-pink-100 text-alergria-pink p-3 rounded-xl text-2xl"><i class="fa-solid fa-microchip"></i></div>
+                        <div class="bg-pink-100 dark:bg-pink-900/30 text-alergria-pink p-3 rounded-xl text-2xl"><i class="fa-solid fa-microchip"></i></div>
                         <div>
                             <h4 class="font-bold text-gray-800 dark:text-white text-lg">45% - Sincronização de Áudio (EPROM)</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">A principal causa de atraso. Ocorreram falhas na conversão dos ficheiros de áudio recebidos pelo site para o formato aceitável pelo chip eletrónico, forçando o <i>re-flash</i> manual do módulo de hardware (reprocessamento de fábrica).</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">A principal causa de atraso. Falhas na conversão dos ficheiros de áudio recebidos pelo site para o formato aceitável pelo chip eletrónico, forçando o <i>re-flash</i> manual do hardware.</p>
                         </div>
                     </div>
-
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-teal-500 flex items-start space-x-4">
-                        <div class="bg-teal-50 text-teal-500 p-3 rounded-xl text-2xl"><i class="fa-solid fa-viruses"></i></div>
+                        <div class="bg-teal-50 dark:bg-teal-900/30 text-teal-500 p-3 rounded-xl text-2xl"><i class="fa-solid fa-viruses"></i></div>
                         <div>
                             <h4 class="font-bold text-gray-800 dark:text-white text-lg">30% - Fila de Assepsia (Câmara UV-C)</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Saturação da capacidade instalada. Em picos de procura, a câmara de ultravioleta e gás ozónio atingiu o seu limite físico de lotes simultâneos (gargalo de *throughput*), atrasando o *Lead Time* da embalagem.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Saturação da capacidade. Em picos de procura, a câmara de ultravioleta e ozónio atingiu o seu limite físico de lotes simultâneos (gargalo de *throughput*), atrasando o *Lead Time*.</p>
                         </div>
                     </div>
-
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-alergria-orange flex items-start space-x-4">
-                        <div class="bg-orange-50 text-alergria-orange p-3 rounded-xl text-2xl"><i class="fa-solid fa-truck-fast"></i></div>
+                        <div class="bg-orange-50 dark:bg-orange-900/30 text-alergria-orange p-3 rounded-xl text-2xl"><i class="fa-solid fa-truck-fast"></i></div>
                         <div>
                             <h4 class="font-bold text-gray-800 dark:text-white text-lg">15% - Logística Externa (*Last-Mile*)</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Imprevistos de roteirização externa. Atrasos causados por tráfego urbano pesado durante as entregas ou pela demora nas docas de receção hospitalar aquando da entrega dos donativos estéreis.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Imprevistos de roteirização externa. Atrasos causados por tráfego urbano pesado ou pela demora nas docas de receção hospitalar aquando da entrega dos donativos estéreis.</p>
                         </div>
                     </div>
-
                     <div class="bg-white/90 dark:bg-gray-800/90 p-6 rounded-3xl shadow-lg border-l-4 border-alergria-blue flex items-start space-x-4">
-                        <div class="bg-blue-50 text-alergria-blue p-3 rounded-xl text-2xl"><i class="fa-solid fa-scissors"></i></div>
+                        <div class="bg-blue-50 dark:bg-blue-900/30 text-alergria-blue p-3 rounded-xl text-2xl"><i class="fa-solid fa-scissors"></i></div>
                         <div>
                             <h4 class="font-bold text-gray-800 dark:text-white text-lg">10% - Reprovação de Qualidade (QC)</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Urso retido na estação de inspeção visual. Durante o teste de tração e resistência, as costuras apresentaram fragilidade, exigindo que a unidade voltasse para a máquina de costura (retrabalho produtivo).</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Urso retido na inspeção visual. Durante o teste de tração, as costuras apresentaram fragilidade, exigindo que a unidade voltasse para a máquina de costura (retrabalho produtivo).</p>
                         </div>
                     </div>
                 </div>
@@ -320,43 +339,47 @@
         
     </main>
 
-    <!-- Modais Genéricos -->
-    <!-- Pedido Sucesso -->
+    <!-- MODAIS DO SISTEMA -->
+    <!-- Modal Pedido Sucesso -->
     <div id="modal-pedido-sucesso" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/80 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-sm w-full relative transform scale-95 transition-transform duration-300 border-t-8 border-green-500" id="modal-pedido-content">
-            <div class="text-center mb-6"><i class="fa-solid fa-circle-check text-5xl text-green-500 mb-4"></i><h3 class="font-fredoka text-2xl font-bold text-gray-800">Ordem Gerada!</h3></div>
-            <div class="bg-gray-100 rounded-xl p-4 text-center mb-6"><p class="text-xs text-gray-500 uppercase font-bold mb-1">Rastreio</p><h4 id="lbl-codigo-gerado" class="font-mono text-3xl font-black text-alergria-blue">URSO-0000</h4></div>
-            <button onclick="irParaRastreio()" class="w-full bg-alergria-blue text-white font-bold py-4 rounded-xl">Rastrear Agora</button>
-            <button onclick="closePedidoModal()" class="w-full mt-3 text-gray-500 font-bold py-2">Fechar</button>
+            <div class="text-center mb-6"><i class="fa-solid fa-circle-check text-5xl text-green-500 mb-4"></i><h3 class="font-fredoka text-2xl font-bold text-gray-800 dark:text-white">Ordem Gerada!</h3></div>
+            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 text-center mb-6"><p class="text-xs text-gray-500 dark:text-gray-300 uppercase font-bold mb-1">Rastreio</p><h4 id="lbl-codigo-gerado" class="font-mono text-3xl font-black text-alergria-blue">URSO-0000</h4></div>
+            <button onclick="irParaRastreio()" class="w-full bg-alergria-blue hover:bg-blue-600 text-white font-bold py-4 rounded-xl transition-colors shadow-lg active:scale-95">Rastrear Agora</button>
+            <button onclick="closePedidoModal()" class="w-full mt-3 text-gray-500 dark:text-gray-400 font-bold py-2">Fechar</button>
         </div>
     </div>
     
-    <!-- Laudo -->
+    <!-- Modal Laudo de Assepsia -->
     <div id="modal-laudo" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/80 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-lg w-full relative transform scale-95 transition-transform duration-300 border-t-8 border-teal-500" id="modal-laudo-content">
             <button onclick="closeLaudoModal()" class="absolute top-4 right-5 text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button>
-            <div class="text-center mb-6 border-b border-gray-100 pb-4"><i class="fa-solid fa-shield-virus text-4xl text-teal-500 mb-2"></i><h3 class="font-fredoka text-2xl font-bold text-gray-800">Laudo de Esterilização</h3></div>
-            <div class="space-y-4 text-sm text-gray-700 mb-6">
-                <div class="flex justify-between border-b border-gray-100 border-dashed pb-2"><span class="font-bold">Lote:</span> <span class="font-mono font-bold" id="laudo-id-lote">URSO-XXXX</span></div>
-                <div class="flex justify-between border-b border-gray-100 border-dashed pb-2"><span class="font-bold">Método:</span> <span>UV-C + Ozônio</span></div>
-                <div class="flex justify-between border-b border-gray-100 border-dashed pb-2"><span class="font-bold">Tempo:</span> <span>45 Min</span></div>
-                <div class="flex justify-between border-b border-gray-100 border-dashed pb-2"><span class="font-bold">Eficácia:</span> <span class="text-green-500 font-bold">99.99%</span></div>
+            <div class="text-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4"><i class="fa-solid fa-shield-virus text-4xl text-teal-500 mb-2"></i><h3 class="font-fredoka text-2xl font-bold text-gray-800 dark:text-white">Laudo de Esterilização</h3></div>
+            <div class="space-y-4 text-sm text-gray-700 dark:text-gray-300 mb-6">
+                <div class="flex justify-between border-b border-gray-100 dark:border-gray-700 border-dashed pb-2"><span class="font-bold">Lote:</span> <span class="font-mono font-bold text-alergria-blue" id="laudo-id-lote">URSO-XXXX</span></div>
+                <div class="flex justify-between border-b border-gray-100 dark:border-gray-700 border-dashed pb-2"><span class="font-bold">Método:</span> <span>UV-C + Ozônio</span></div>
+                <div class="flex justify-between border-b border-gray-100 dark:border-gray-700 border-dashed pb-2"><span class="font-bold">Tempo:</span> <span>45 Min</span></div>
+                <div class="flex justify-between border-b border-gray-100 dark:border-gray-700 border-dashed pb-2"><span class="font-bold">Eficácia:</span> <span class="text-green-500 font-bold">99.99%</span></div>
+            </div>
+            <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl flex items-center justify-center border border-green-200 dark:border-green-800">
+                <i class="fa-solid fa-check-circle text-green-500 text-xl mr-2"></i><span class="font-bold text-green-700 dark:text-green-400">Padrão Hospitalar Aprovado</span>
             </div>
         </div>
     </div>
 
-    <!-- Fluxograma Modal -->
+    <!-- Modal Fluxograma PCP -->
     <div id="modal-fluxograma" class="fixed inset-0 z-[100] hidden items-center justify-center bg-gray-900/60 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-md w-full relative transform scale-95 transition-transform duration-300" id="modal-content">
             <button onclick="closeModal()" class="absolute top-4 right-5 text-gray-400 hover:text-red-500 text-2xl transition-colors"><i class="fa-solid fa-xmark"></i></button>
             <div id="modal-icon" class="text-5xl mb-4 text-center"><i class="fa-solid fa-info-circle"></i></div>
             <h3 id="modal-title" class="font-fredoka text-2xl font-bold text-gray-800 dark:text-white mb-3 text-center">Título</h3>
             <p id="modal-desc" class="text-gray-600 dark:text-gray-300 text-center leading-relaxed">Desc...</p>
-            <button onclick="closeModal()" class="w-full mt-6 bg-gray-100 font-bold py-3 rounded-xl transition-colors">Entendi o Processo</button>
+            <button onclick="closeModal()" class="w-full mt-6 bg-gray-100 dark:bg-gray-700 font-bold py-3 rounded-xl transition-colors hover:bg-gray-200 dark:hover:bg-gray-600">Entendi o Processo</button>
         </div>
     </div>
 
     <script>
+        // --- NAVEGAÇÃO SPA ---
         let currentOrderCode = '';
 
         function showView(viewId) {
@@ -371,9 +394,9 @@
                     newView.classList.add('fade-in');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     
+                    // Inicialização de Módulos Específicos
                     if(viewId === 'view-paciente') setTimeout(initBear3D, 100);
                     if(viewId === 'view-admin') setTimeout(initPCPChart, 300);
-                    // Dispara a criação do gráfico de SLA quando a nova aba é aberta
                     if(viewId === 'view-sla-analysis') setTimeout(initSLAChart, 300);
                 }
             };
@@ -386,9 +409,7 @@
 
         function toggleTheme() { document.documentElement.classList.toggle('dark'); }
 
-        // ==========================================
-        //  NOVO: GRÁFICO DE SLA E GARGALOS (Chart.js)
-        // ==========================================
+        // --- GRÁFICO: ANÁLISE DE SLA (Doughnut Chart) ---
         let slaChartInstance = null;
         function initSLAChart() {
             const ctx = document.getElementById('slaChart');
@@ -398,18 +419,13 @@
             slaChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Falha no Chip EPROM (Áudio)', 'Saturação UV-C', 'Atraso Logístico Last-Mile', 'Reprovação QC Costura'],
+                    labels: ['Falha Chip (Áudio)', 'Fila UV-C', 'Last-Mile', 'Reprovação QC'],
                     datasets: [{
                         data: [45, 30, 15, 10],
-                        backgroundColor: [
-                            '#FF5AAE', // Rosa
-                            '#14b8a6', // Teal (Verde assepsia)
-                            '#FF8200', // Laranja
-                            '#2F9BFF'  // Azul
-                        ],
+                        backgroundColor: ['#FF5AAE', '#14b8a6', '#FF8200', '#2F9BFF'],
                         borderWidth: 3,
                         borderColor: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
-                        hoverOffset: 10
+                        hoverOffset: 8
                     }]
                 },
                 options: {
@@ -417,28 +433,14 @@
                     maintainAspectRatio: false,
                     cutout: '65%',
                     plugins: {
-                        legend: { 
-                            position: 'bottom',
-                            labels: {
-                                font: { family: 'Nunito', weight: 'bold' },
-                                padding: 20
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.label + ': ' + context.parsed + '% dos atrasos';
-                                }
-                            }
-                        }
+                        legend: { position: 'bottom', labels: { font: { family: 'Nunito', weight: 'bold' }, padding: 15 } },
+                        tooltip: { callbacks: { label: function(c) { return ' ' + c.label + ': ' + c.parsed + '%'; } } }
                     }
                 }
             });
         }
 
-        // ==========================================
-        //  OUTRAS FUNÇÕES (Mantidas do PCP e Rastreio)
-        // ==========================================
+        // --- LÓGICA DE PEDIDOS E RASTREIO ---
         function finalizarPedido() {
             const rand = Math.floor(1000 + Math.random() * 9000);
             currentOrderCode = `URSO-${rand}`;
@@ -487,11 +489,12 @@
             let html = '';
             logs.forEach((log, index) => {
                 const logTime = new Date(now.getTime() - (index * 25 * 60000));
-                html += `<li class="relative pl-6 pb-4"><div class="absolute w-3 h-3 ${index === 0 ? 'bg-alergria-blue animate-pulse' : 'bg-gray-300'} rounded-full -left-[7px] top-1 border-2 border-white"></div><p class="text-xs font-bold text-gray-400 mb-1">${formatTime(logTime)}</p><p class="font-bold text-sm ${log.type}">${log.title}</p><p class="text-xs text-gray-600">${log.desc}</p></li>`;
+                html += `<li class="relative pl-6 pb-4"><div class="absolute w-3 h-3 ${index === 0 ? 'bg-alergria-blue animate-pulse' : 'bg-gray-300 dark:bg-gray-600'} rounded-full -left-[7px] top-1 border-2 border-white dark:border-gray-800"></div><p class="text-xs font-bold text-gray-400 mb-1">${formatTime(logTime)}</p><p class="font-bold text-sm ${log.type}">${log.title}</p><p class="text-xs text-gray-600 dark:text-gray-400">${log.desc}</p></li>`;
             });
             list.innerHTML = html;
         }
 
+        // --- MODAIS ---
         function openLaudoModal() { const m = document.getElementById('modal-laudo'); const c = document.getElementById('modal-laudo-content'); m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { c.classList.remove('scale-95'); c.classList.add('scale-100'); }, 10); }
         function closeLaudoModal() { const m = document.getElementById('modal-laudo'); const c = document.getElementById('modal-laudo-content'); c.classList.remove('scale-100'); c.classList.add('scale-95'); setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 250); }
 
@@ -507,27 +510,29 @@
         function openModal(step) { const m = document.getElementById('modal-fluxograma'); const c = document.getElementById('modal-content'); document.getElementById('modal-title').innerText = stepData[step].title; document.getElementById('modal-desc').innerText = stepData[step].desc; const iconDiv = document.getElementById('modal-icon'); iconDiv.className = `text-5xl mb-4 text-center ${stepData[step].color}`; iconDiv.innerHTML = `<i class="fa-solid ${stepData[step].icon}"></i>`; m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { c.classList.remove('scale-95'); c.classList.add('scale-100'); }, 10); }
         function closeModal() { const m = document.getElementById('modal-fluxograma'); const c = document.getElementById('modal-content'); c.classList.remove('scale-100'); c.classList.add('scale-95'); setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 250); }
 
+        // --- SISTEMA DE LOGIN ---
         function toggleLogin(type) {
             ['cliente-login', 'admin-login'].forEach(t => {
                 const form = document.getElementById('form-' + t); const tab = document.getElementById('tab-' + t);
-                if(form && tab) { form.classList.toggle('hidden', t !== type); if(t === type) { tab.classList.add('bg-white', 'text-alergria-blue'); tab.classList.remove('text-gray-500'); } else { tab.classList.remove('bg-white', 'text-alergria-blue'); tab.classList.add('text-gray-500'); } }
+                if(form && tab) { form.classList.toggle('hidden', t !== type); if(t === type) { tab.classList.add('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue'); tab.classList.remove('text-gray-500'); } else { tab.classList.remove('bg-white', 'dark:bg-gray-800', 'shadow-sm', 'text-alergria-blue'); tab.classList.add('text-gray-500'); } }
             });
         }
-
         function loginUser(event) { event.preventDefault(); alert(`Sessão de Cliente Iniciada.`); showView('view-home'); }
         function loginAdmin(event) {
             event.preventDefault(); const user = document.getElementById('admin-user').value; const pass = document.getElementById('admin-pass').value;
             if((user === 'admin' || user === 'dono') && (pass === 'BancaSenai' || pass === 'admin')) { document.getElementById('admin-user').value = ''; document.getElementById('admin-pass').value = ''; showView('view-admin'); } else alert('Credenciais inválidas.');
         }
 
+        // --- GRÁFICO PCP ---
         let pcpChartInstance = null;
         function initPCPChart() {
             const ctx = document.getElementById('pcpChart');
             if(!ctx) return;
             if(pcpChartInstance) pcpChartInstance.destroy();
-            pcpChartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro'], datasets: [{ label: 'OPs Processadas (PCP)', data: [120, 150, 180, 220, 260, 318], backgroundColor: '#FAEA53', borderRadius: 6 }, { label: 'Entregas (Last-Mile)', data: [110, 145, 175, 210, 255, 305], backgroundColor: '#2F9BFF', borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } } });
+            pcpChartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro'], datasets: [{ label: 'OPs Processadas (PCP)', data: [120, 150, 180, 220, 260, 318], backgroundColor: '#FAEA53', borderRadius: 6 }, { label: 'Entregas (Last-Mile)', data: [110, 145, 175, 210, 255, 305], backgroundColor: '#2F9BFF', borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#374151' } } }, scales: { y: { beginAtZero: true, grid: { color: document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, ticks: { color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280' } }, x: { grid: { display: false }, ticks: { color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280' } } } } });
         }
 
+        // --- URSO 3D & AUDIO ---
         let bearScene, bearCamera, bearRenderer, bearGroup, bearMaterial, bearInitialized = false;
         function initBear3D() {
             const container = document.getElementById('bear-3d-container'); if(bearInitialized || container.innerHTML !== "") return; bearInitialized = true;
