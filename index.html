@@ -159,8 +159,8 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Criança (Paciente)</label>
-                                <select id="paciente-nome" class="w-full p-3 rounded-xl border border-gray-200 focus:border-alergria-orange bg-gray-50 dark:bg-gray-700 outline-none text-gray-700 dark:text-gray-200 font-semibold cursor-pointer">
-                                    <option value="">Selecione o nome...</option>
+                                <input type="text" id="paciente-nome" placeholder="Escreva o nome da criança..." class="w-full p-3 rounded-xl border border-gray-200 focus:border-alergria-orange bg-gray-50 dark:bg-gray-700 outline-none text-gray-700 dark:text-gray-200 font-semibold">
+                            </div>
                                     <!-- Injetado via JS -->
                                 </select>
                             </div>
@@ -411,7 +411,15 @@
 
     <script>
         // --- NOME E HOSPITAIS (Injeção via JS) ---
-        const nomesCriancas = ["Miguel","Arthur","Gael","Heitor","Theo","Davi","Gabriel","Bernardo","Samuel","João Miguel","Enzo Gabriel","Alice","Helena","Laura","Maria Alice","Valentina","Heloísa","Maria Clara","Maria Cecília","Cecília","Sophia","Júlia","Lorena","Lívia","Manuela","Pedro","Lorenzo","Isaac","Benjamin","Matheus","Lucas","Nicolas","Joaquim","Henrique","Zion","Levi","Felipe","Antônio","Vicente","Estêvão","Isabella","Isadora","Maitê","Antonella","Sarah","Isabelly","Melissa","Catarina","Beatriz","Emanuelly","Bento","Noah","Emanuel","João","Rafael","Daniel","Lucca","Enzo","João Pedro","Pietro","Leonardo","Cauã","Gustavo","Eduardo","Anthony","Lara","Mirella","Eloá","Clara","Ana Clara","Ana Júlia","Marina","Ester","Lavínia","Yasmin","Luna","Camila","Vitória","Mariana","Letícia","Agatha","Murilo","Vitor","Pedro Henrique","Caleb","João Lucas","Luiz Miguel","Bryan","Enrico","Benício","Henry","Rebeca","Ana Luiza","Isabel","Alícia","Ana","Malu","Igor","Thiago","Fernando","Bárbara"];
+        // --- HOSPITAIS (Injeção via JS) ---
+        const hospitaisRJ = ["INCA - Instituto Nacional de Câncer", "Hospital Municipal Souza Aguiar", "Hospital Municipal Miguel Couto", "Hospital Municipal Salgado Filho", "Hospital Municipal Lourenço Jorge", "Hospital Copa D'Or", "Hospital Barra D'Or", "Hospital Quinta D'Or", "Hospital Norte D'Or", "Hospital Copa Star", "Hospital São Lucas Copacabana", "Hospital Samaritano Botafogo", "Hospital Samaritano Barra", "Hospital Vitória", "Hospital Pasteur", "Hospital Rio Mar", "Casa de Saúde São José", "Complexo Hospitalar de Niterói (CHN)", "Hospital de Clínicas de Jacarepaguá", "Hospital da Lagoa"];
+
+        function popularCampos() {
+            const selectHosp = document.getElementById('paciente-hospital');
+            if(selectHosp && selectHosp.options.length <= 1) {
+                hospitaisRJ.sort().forEach(hosp => selectHosp.add(new Option(hosp, hosp)));
+            }
+        }
         const hospitaisRJ = ["INCA - Instituto Nacional de Câncer", "Hospital Municipal Souza Aguiar", "Hospital Municipal Miguel Couto", "Hospital Municipal Salgado Filho", "Hospital Municipal Lourenço Jorge", "Hospital Copa D'Or", "Hospital Barra D'Or", "Hospital Quinta D'Or", "Hospital Norte D'Or", "Hospital Copa Star", "Hospital São Lucas Copacabana", "Hospital Samaritano Botafogo", "Hospital Samaritano Barra", "Hospital Vitória", "Hospital Pasteur", "Hospital Rio Mar", "Casa de Saúde São José", "Complexo Hospitalar de Niterói (CHN)", "Hospital de Clínicas de Jacarepaguá", "Hospital da Lagoa"];
 
         function popularCampos() {
@@ -469,18 +477,25 @@
 
         // --- LÓGICA DE PEDIDOS E RASTREIO ---
         function finalizarPedido() {
-            const nome = document.getElementById('paciente-nome').value;
+            // O .trim() remove espaços em branco acidentais antes e depois do nome
+            const nome = document.getElementById('paciente-nome').value.trim();
             const hosp = document.getElementById('paciente-hospital').value;
-            if(!nome || !hosp) { alert('Atenção: Selecione o nome da criança e o hospital de destino antes de emitir a OP.'); return; }
+            
+            if(!nome || !hosp) { 
+                alert('Atenção: Escreva o nome da criança e selecione o hospital de destino antes de emitir a OP.'); 
+                return; 
+            }
 
             const rand = Math.floor(1000 + Math.random() * 9000);
             currentOrderCode = `URSO-${rand}`;
+            
             document.getElementById('lbl-codigo-gerado').innerText = currentOrderCode;
             document.getElementById('lbl-destinatario-sucesso').innerText = `Destino: ${nome} - ${hosp}`;
 
             const modal = document.getElementById('modal-pedido-sucesso');
+            const content = document.getElementById('modal-pedido-content');
             modal.classList.remove('hidden'); modal.classList.add('flex');
-            setTimeout(() => { document.getElementById('modal-pedido-content').classList.remove('scale-95'); document.getElementById('modal-pedido-content').classList.add('scale-100'); }, 10);
+            setTimeout(() => { content.classList.remove('scale-95'); content.classList.add('scale-100'); }, 10);
         }
 
         function closePedidoModal() {
